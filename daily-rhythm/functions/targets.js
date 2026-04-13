@@ -5,7 +5,6 @@ function readCSV(filepath) {
   try {
     const content = fs.readFileSync(filepath, 'utf8');
     const lines = content.trim().split('\n');
-    const headers = lines[0].split(',');
     const targets = lines.slice(1).map((line, idx) => {
       const parts = line.split(',');
       return {
@@ -26,7 +25,7 @@ function readCSV(filepath) {
 
 exports.handler = async (event, context) => {
   try {
-    const csvPath = path.join(__dirname, '../assets/tracking-template.csv');
+    const csvPath = path.resolve(__dirname, '../assets/tracking-template.csv');
     const targets = readCSV(csvPath);
 
     return {

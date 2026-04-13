@@ -1,10 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-
 exports.handler = async (event, context) => {
   try {
-    const offerPath = path.join(__dirname, '../assets/offer-doc.md');
-    const content = fs.readFileSync(offerPath, 'utf8');
+    const url = new URL('../assets/offer-doc.md', `https://${event.headers.host}/`).href;
+    const response = await fetch(url);
+    const content = await response.text();
 
     return {
       statusCode: 200,

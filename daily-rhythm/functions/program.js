@@ -1,10 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-
 exports.handler = async (event, context) => {
   try {
-    const programPath = path.join(__dirname, '../program-8week.json');
-    const programData = JSON.parse(fs.readFileSync(programPath, 'utf8'));
+    const url = new URL('../program-8week.json', `https://${event.headers.host}/`).href;
+    const response = await fetch(url);
+    const programData = await response.json();
 
     return {
       statusCode: 200,

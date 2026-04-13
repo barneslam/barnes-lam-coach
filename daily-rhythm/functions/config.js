@@ -1,10 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-
 exports.handler = async (event, context) => {
   try {
-    const configPath = path.join(__dirname, '../config.json');
-    const configData = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    // Fetch config.json from published static files
+    const url = new URL('../config.json', `https://${event.headers.host}/`).href;
+    const response = await fetch(url);
+    const configData = await response.json();
 
     return {
       statusCode: 200,

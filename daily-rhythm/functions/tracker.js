@@ -1,10 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-
 exports.handler = async (event, context) => {
   try {
-    const trackerPath = path.join(__dirname, '../tracker.json');
-    const trackerData = JSON.parse(fs.readFileSync(trackerPath, 'utf8'));
+    const url = new URL('../tracker.json', `https://${event.headers.host}/`).href;
+    const response = await fetch(url);
+    const trackerData = await response.json();
 
     return {
       statusCode: 200,

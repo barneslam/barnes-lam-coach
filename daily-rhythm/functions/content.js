@@ -3,7 +3,7 @@ const path = require('path');
 
 exports.handler = async (event, context) => {
   try {
-    const contentDir = path.join(__dirname, '../content');
+    const contentDir = path.resolve(__dirname, '../content');
     let contentFiles = [];
 
     if (fs.existsSync(contentDir)) {

@@ -4,7 +4,7 @@ const path = require('path');
 exports.handler = async (event, context) => {
   try {
     const drafts = [];
-    const assetsDir = path.join(__dirname, '../assets');
+    const assetsDir = path.resolve(__dirname, '../assets');
 
     if (fs.existsSync(assetsDir)) {
       fs.readdirSync(assetsDir).forEach(file => {
