@@ -1,0 +1,42 @@
+[build]
+  base = "daily-rhythm"
+  command = "echo 'Dashboard ready for deployment'"
+  publish = "."
+  functions = "daily-rhythm/functions"
+
+[dev]
+  command = "node daily-rhythm/dashboard-server.js"
+  port = 3001
+
+# Serve dashboard.html as the homepage
+[[redirects]]
+  from = "/"
+  to = "/dashboard.html"
+  status = 200
+
+# Serve approval dashboard
+[[redirects]]
+  from = "/approval"
+  to = "/approval-dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/approval.html"
+  to = "/approval-dashboard.html"
+  status = 200
+
+# Redirect all API calls to Netlify Functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Environment variables - Set in Netlify UI under Settings → Build & deploy → Environment
+[env]
+  [env.production]
+    SUPABASE_URL = "https://qiwdgyilhwkndqkgqruf.supabase.co"
+    SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY_HERE"
+
+# Edge functions for real-time data
+[functions]
+  directory = "daily-rhythm/functions"
