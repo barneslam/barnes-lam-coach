@@ -1,0 +1,51 @@
+name: Daily Summary Email
+
+on:
+  schedule:
+    # 8:30 AM UTC (3:30 AM EDT / 2:30 AM CDT)
+    - cron: '30 8 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read yesterday's metrics
+        id: metrics
+        run: |
+          YESTERDAY=$(date -u -d "1 day ago" +%Y-%m-%d)
+
+          # Default values
+          SENT=0
+          LEADS=0
+          PLANNED=0
+
+          # Try to read from yesterday's log if it exists
+          if [ -f "daily-rhythm/logs/${YESTERDAY}.md" ]; then
+            # Extract from log (simple grep for now)
+            SENT=$(grep -i "messages sent" "daily-rhythm/logs/${YESTERDAY}.md" | grep -o '[0-9]\+' | head -1 || echo "0")
+            LEADS=$(grep -i "new leads" "daily-rhythm/logs/${YESTERDAY}.md" | grep -o '[0-9]\+' | head -1 || echo "0")
+          fi
+
+          # Planned for today - read from tracker or config
+          PLANNED=7  # Default to 7 messages planned daily
+
+          echo "sent_yesterday=${SENT}" >> $GITHUB_OUTPUT
+          echo "new_leads=${LEADS}" >> $GITHUB_OUTPUT
+          echo "planned_today=${PLANNED}" >> $GITHUB_OUTPUT
+
+          echo "Metrics - Sent: $SENT, Leads: $LEADS, Planned: $PLANNED"
+
+      - name: Send daily email
+        run: |
+          curl -X GET "https://gtm-engine-d.netlify.app/api/send-daily-email?sent_yesterday=${{ steps.metrics.outputs.sent_yesterday }}&new_leads=${{ steps.metrics.outputs.new_leads }}&planned_today=${{ steps.metrics.outputs.planned_today }}" \
+            -H "User-Agent: GitHub-Actions" \
+            -w "\nStatus: %{http_code}\n"
+
+      - name: Log completion
+        if: always()
+        run: |
+          echo "Daily summary email sent at $(date -u)"
+          echo "Metrics: sent=${{ steps.metrics.outputs.sent_yesterday }}, leads=${{ steps.metrics.outputs.new_leads }}, planned=${{ steps.metrics.outputs.planned_today }}"
