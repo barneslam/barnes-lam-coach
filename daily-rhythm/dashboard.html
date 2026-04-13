@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTM Engine — Daily Operating Rhythm</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+  :root {
+    --bg: #fffdf7; --surface: #f5f0e8; --surface2: #ede8de;
+    --border: #d8d0c0; --text: #1a1714; --muted: #6b6560;
+    --accent: #a07828; --accent-light: #c9a84c; --accent-dark: #8a6620;
+    --green: #4a7c59; --red: #a04040;
+    --orange: #a07828; --blue: #5a7898; --light-blue: #e0f2fe;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+  header { padding: 24px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  header h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; color: var(--accent); font-weight: 600; }
+  .header-meta { font-size: 13px; color: var(--muted); }
+
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
+  .tab { padding: 10px 20px; cursor: pointer; color: var(--muted); font-size: 13px; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  .card h2 { font-size: 15px; color: var(--accent); margin-bottom: 12px; font-weight: 600; }
+  .card h3 { font-size: 13px; color: var(--text); margin: 16px 0 8px; }
+
+  .schedule-block { display: flex; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .schedule-block:last-child { border-bottom: none; }
+  .schedule-time { font-size: 13px; color: var(--accent); min-width: 70px; font-weight: 600; }
+  .schedule-name { font-size: 14px; color: var(--text); min-width: 140px; }
+  .schedule-desc { font-size: 12px; color: var(--muted); }
+  .schedule-status { margin-left: auto; font-size: 11px; padding: 3px 8px; border-radius: 4px; }
+  .status-pending { background: var(--surface2); color: var(--orange); }
+  .status-active { background: #4a7c5920; color: var(--green); }
+  .status-done { background: var(--surface2); color: var(--muted); }
+
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .metric { background: var(--surface2); border-radius: 6px; padding: 16px; text-align: center; }
+  .metric-value { font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: var(--accent-dark); }
+  .metric-label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .metric-target { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .target-row { display: grid; grid-template-columns: 40px 1fr 1fr 80px 100px; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: center; font-size: 13px; }
+  .target-row:last-child { border-bottom: none; }
+  .target-header { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .confidence-high { color: var(--green); font-weight: 600; }
+  .confidence-medium { color: var(--accent); font-weight: 500; }
+  .target-signal { color: var(--muted); font-size: 12px; }
+  .target-status { font-size: 11px; padding: 2px 8px; border-radius: 3px; text-align: center; }
+  .status-identified { background: #5a789820; color: var(--blue); }
+  .status-messaged { background: #a0782820; color: var(--accent-dark); }
+  .status-responded { background: #4a7c5920; color: var(--green); }
+  .status-scheduled { background: var(--light-blue); color: #0369a1; }
+  .status-cold { background: var(--surface2); color: var(--muted); }
+
+  .draft-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+  .draft-header { padding: 14px 20px; background: var(--surface2); display: flex; justify-content: space-between; align-items: center; }
+  .draft-title { font-size: 13px; font-weight: 600; }
+  .draft-status { font-size: 11px; padding: 3px 10px; border-radius: 4px; }
+  .draft-pending { background: #a0782820; color: var(--accent-dark); }
+  .draft-approved { background: #4a7c5920; color: var(--green); }
+  .draft-body { padding: 20px; }
+  .draft-content { background: #fffdf7; border: 1px solid var(--border); border-radius: 6px; padding: 16px; font-size: 13px; line-height: 1.7; color: var(--text); white-space: pre-wrap; margin-bottom: 12px; }
+  .draft-meta { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+  .draft-actions { display: flex; gap: 8px; }
+
+  .btn { padding: 8px 16px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .btn:hover { background: var(--border); }
+  .btn-approve { border-color: var(--accent); color: var(--accent-dark); font-weight: 600; }
+  .btn-approve:hover { background: var(--accent); color: #fffdf7; }
+  .btn-skip { border-color: var(--muted); color: var(--muted); }
+
+  .log-content { background: #fffdf7; border: 1px solid var(--border); border-radius: 6px; padding: 20px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; max-height: 600px; overflow-y: auto; }
+
+  .week-timeline { display: flex; gap: 0; margin-bottom: 24px; overflow-x: auto; }
+  .week-item { flex: 1; min-width: 120px; padding: 12px; text-align: center; border: 1px solid var(--border); font-size: 12px; }
+  .week-item:first-child { border-radius: 6px 0 0 6px; }
+  .week-item:last-child { border-radius: 0 6px 6px 0; }
+  .week-current { background: var(--accent); color: #fffdf7; font-weight: 700; }
+  .week-future { background: var(--surface); color: var(--muted); }
+  .week-past { background: var(--surface2); color: var(--accent-dark); }
+  .week-label { font-size: 10px; color: inherit; opacity: 0.7; }
+
+  .offer-doc { padding: 24px; line-height: 1.8; }
+  .offer-doc h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; color: var(--accent-dark); margin-bottom: 20px; }
+  .offer-doc h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 15px; color: var(--accent-dark); margin: 20px 0 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .offer-doc p, .offer-doc li { font-size: 13px; color: var(--text); margin-bottom: 8px; }
+
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .modal.active { display: flex; }
+  .modal-content { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 32px; max-width: 600px; max-height: 80vh; overflow-y: auto; position: relative; }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-title { font-family: 'Playfair Display', Georgia, serif; font-size: 18px; color: var(--accent-dark); }
+  .modal-close { font-size: 24px; cursor: pointer; color: var(--muted); border: none; background: none; padding: 0; }
+  .modal-close:hover { color: var(--text); }
+  .modal-subject { background: var(--light-blue); border: 1px solid #b3e5fc; border-radius: 6px; padding: 12px; margin-bottom: 16px; font-size: 13px; font-weight: 600; color: #0369a1; }
+  .modal-body { background: #fffdf7; border: 1px solid var(--border); border-radius: 6px; padding: 16px; font-size: 13px; line-height: 1.7; color: var(--text); white-space: pre-wrap; }
+
+  .outreach-btn { padding: 6px 12px; background: var(--light-blue); border: 1px solid #b3e5fc; color: #0369a1; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; }
+  .outreach-btn:hover { background: #b3e5fc; }
+
+  @media (max-width: 768px) {
+    .target-row { grid-template-columns: 1fr; gap: 4px; }
+    .target-header { display: none; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    .week-timeline { flex-wrap: wrap; }
+    .week-item { min-width: 80px; }
+    .modal-content { max-width: 90vw; padding: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>GTM ENGINE — DAILY OPERATING RHYTHM</h1>
+    <div class="header-meta" id="header-meta">Loading...</div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-panel="dashboard">Dashboard</div>
+    <div class="tab" data-panel="schedule">Schedule</div>
+    <div class="tab" data-panel="targets">Targets (20)</div>
+    <div class="tab" data-panel="drafts">Drafts</div>
+    <div class="tab" data-panel="content">Content</div>
+    <div class="tab" data-panel="logs">Logs</div>
+    <div class="tab" data-panel="offer">Offer Doc</div>
+    <div class="tab" data-panel="program">8-Week Program</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="panel active" id="dashboard">
+    <div class="week-timeline" id="week-timeline"></div>
+    <div class="metric-grid" id="metrics"></div>
+    <div class="card" style="margin-top: 16px;">
+      <h2>TODAY'S SCORECARD</h2>
+      <div class="log-content" id="today-log">Loading...</div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="panel" id="schedule">
+    <div class="card">
+      <h2>DAILY BLOCKS</h2>
+      <div id="schedule-blocks"></div>
+    </div>
+  </div>
+
+  <!-- TARGETS -->
+  <div class="panel" id="targets">
+    <div class="card">
+      <h2>OUTREACH SCHEDULED</h2>
+      <div id="outreach-list" style="margin-bottom: 24px;"></div>
+    </div>
+    <div class="card">
+      <h2>TARGET LIST</h2>
+      <div class="target-row target-header">
+        <div>#</div><div>Name / Business</div><div>Signal</div><div>Confidence</div><div>Status</div>
+      </div>
+      <div id="target-list"></div>
+    </div>
+  </div>
+
+  <!-- DRAFTS -->
+  <div class="panel" id="drafts">
+    <div id="drafts-list"></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="panel" id="content">
+    <div id="content-list"></div>
+  </div>
+
+  <!-- LOGS -->
+  <div class="panel" id="logs">
+    <div class="card">
+      <h2>DAILY LOGS</h2>
+      <div id="log-dates" style="margin-bottom: 16px;"></div>
+      <div class="log-content" id="log-content">Select a date above.</div>
+    </div>
+  </div>
+
+  <!-- OFFER DOC -->
+  <div class="panel" id="offer">
+    <div class="card">
+      <h2>ONE-PAGE OFFER DOC</h2>
+      <div class="offer-doc" id="offer-content">Loading...</div>
+    </div>
+  </div>
+
+  <!-- 8-WEEK PROGRAM -->
+  <div class="panel" id="program">
+    <div id="program-weeks"></div>
+  </div>
+</div>
+
+<!-- MESSAGE MODAL -->
+<div class="modal" id="messageModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Message</div>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-subject" id="modalSubject"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const API = '';
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.panel).classList.add('active');
+  });
+});
+
+// Determine current schedule block
+function getCurrentBlock(blocks) {
+  const now = new Date();
+  const mins = now.getHours() * 60 + now.getMinutes();
+  for (let i = blocks.length - 1; i >= 0; i--) {
+    const [h, m] = blocks[i].time.split(':').map(Number);
+    if (mins >= h * 60 + m) return blocks[i].id;
+  }
+  return null;
+}
+
+// Simple markdown-ish rendering
+function renderMd(text) {
+  return text
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/\n/g, '<br>');
+}
+
+async function load() {
+  const [todayRes, configRes, trackerRes, targetsRes, draftsRes, logsRes, offerRes, programRes, outreachRes] = await Promise.all([
+    fetch('/api/today').then(r => r.json()),
+    fetch('/api/config').then(r => r.json()),
+    fetch('/api/tracker').then(r => r.json()),
+    fetch('/api/targets').then(r => r.json()),
+    fetch('/api/drafts').then(r => r.json()),
+    fetch('/api/logs').then(r => r.json()),
+    fetch('/api/offer-doc').then(r => r.json()),
+    fetch('/api/program').then(r => r.json()),
+    fetch('/api/outreach').then(r => r.json()),
+  ]);
+
+  // Header
+  document.getElementById('header-meta').textContent =
+    `${todayRes.day}, ${todayRes.date} — Week ${configRes.week}/8`;
+
+  // Week timeline
+  const timeline = document.getElementById('week-timeline');
+  const weekNames = ['Define the offer', 'Fill pipeline', 'Free diagnostics', 'First paid session',
+                     'Systematize', 'Scale pipeline', 'Build upsell', 'Lock in rhythm'];
+  timeline.innerHTML = Array.from({length: 8}, (_, i) => {
+    const w = i + 1;
+    const cls = w === configRes.week ? 'week-current' : w < configRes.week ? 'week-past' : 'week-future';
+    return `<div class="week-item ${cls}"><div>W${w}</div><div class="week-label">${weekNames[i]}</div></div>`;
+  }).join('');
+
+  // Metrics
+  const days = trackerRes.days || {};
+  const todayData = days[todayRes.date] || {};
+  const weeklyMsgs = Object.values(days).reduce((s, d) => s + (d.messages_sent || 0), 0);
+  const weeklyResp = Object.values(days).reduce((s, d) => s + (d.responses_received || 0), 0);
+  const weeklyCalls = Object.values(days).reduce((s, d) => s + (d.calls_booked || 0), 0);
+  const weeklyRev = Object.values(days).reduce((s, d) => s + (d.revenue || 0), 0);
+
+  document.getElementById('metrics').innerHTML = `
+    <div class="metric"><div class="metric-value">${targetsRes.targets?.length || 0}</div><div class="metric-label">Targets</div></div>
+    <div class="metric"><div class="metric-value">${weeklyMsgs}</div><div class="metric-label">Messages Sent</div><div class="metric-target">/ ${configRes.weekly_targets?.messages_sent || 20}</div></div>
+    <div class="metric"><div class="metric-value">${weeklyResp}</div><div class="metric-label">Responses</div><div class="metric-target">/ ${configRes.weekly_targets?.responses || '3-5'}</div></div>
+    <div class="metric"><div class="metric-value">${weeklyCalls}</div><div class="metric-label">Calls Booked</div><div class="metric-target">/ ${configRes.weekly_targets?.calls_booked || 2}</div></div>
+    <div class="metric"><div class="metric-value">${draftsRes.filter(d => d.status === 'pending').length}</div><div class="metric-label">Pending Drafts</div></div>
+    <div class="metric"><div class="metric-value">$${weeklyRev}</div><div class="metric-label">Revenue</div><div class="metric-target">/ $${configRes.weekly_targets?.revenue || 0}</div></div>
+  `;
+
+  // Today's log
+  const todayLog = await fetch(`/api/log/${todayRes.date}`).then(r => r.json());
+  document.getElementById('today-log').textContent = todayLog.content;
+
+  // Schedule
+  const currentBlock = getCurrentBlock(configRes.blocks);
+  document.getElementById('schedule-blocks').innerHTML = configRes.blocks.map(b => {
+    const status = b.id === currentBlock ? 'active' : 'pending';
+    const statusLabel = b.id === currentBlock ? 'NOW' : b.time;
+    return `<div class="schedule-block">
+      <div class="schedule-time">${b.time}</div>
+      <div class="schedule-name">${b.name}</div>
+      <div class="schedule-desc">${b.description}</div>
+      <div class="schedule-status status-${status}">${statusLabel}</div>
+    </div>`;
+  }).join('');
+
+  // Outreach
+  window.outreachMessages = outreachRes.outreach || [];
+  document.getElementById('outreach-list').innerHTML = (outreachRes.outreach || []).map((o, idx) => {
+    return `<div class="target-row" style="grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: center;">
+      <div><strong>${o.name}</strong><br><span style="color:var(--muted);font-size:11px">${o.business}</span></div>
+      <div class="target-signal">${o.signal}</div>
+      <div><span class="target-status status-scheduled">Scheduled ${o.send_date}</span></div>
+      <div><button class="outreach-btn" onclick="showMessage(${idx})">View</button></div>
+    </div>`;
+  }).join('');
+
+  // Targets
+  document.getElementById('target-list').innerHTML = (targetsRes.targets || []).map(t => {
+    const confClass = (t.confidence || '').includes('HIGH') ? 'high' : 'medium';
+    const statusClass = t.status.replace('_', '-');
+    return `<div class="target-row">
+      <div>${t.id}</div>
+      <div><strong>${t.name}</strong><br><span style="color:var(--muted);font-size:11px">${t.business || ''}</span></div>
+      <div class="target-signal">${t.signal.substring(0, 80)}...</div>
+      <div class="confidence-${confClass}">${t.confidence}</div>
+      <div><span class="target-status status-${statusClass}">${t.status}</span></div>
+    </div>`;
+  }).join('');
+
+  // Drafts
+  document.getElementById('drafts-list').innerHTML = draftsRes.length === 0
+    ? '<div class="card"><h2>No drafts yet</h2></div>'
+    : draftsRes.map(d => {
+      const isPending = d.status === 'pending';
+      return `<div class="draft-card">
+        <div class="draft-header">
+          <div class="draft-title">${d.filename.replace('.md', '')}</div>
+          <div class="draft-status ${isPending ? 'draft-pending' : 'draft-approved'}">${isPending ? 'PENDING' : 'APPROVED'}</div>
+        </div>
+        <div class="draft-body">
+          <div class="draft-content">${d.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+          ${isPending ? `<div class="draft-actions">
+            <button class="btn btn-approve" onclick="approveDraft('${d.filename}')">Approve All</button>
+            <button class="btn btn-skip">Skip</button>
+          </div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+  // Content
+  const contentRes = await fetch('/api/content').then(r => r.json());
+  document.getElementById('content-list').innerHTML = contentRes.length === 0
+    ? '<div class="card"><h2>No published content yet</h2><p style="color:var(--muted);margin-top:8px">Content will appear here after you approve drafts.</p></div>'
+    : contentRes.map(c => `<div class="card"><h2>${c.filename}</h2><div class="log-content">${c.content}</div></div>`).join('');
+
+  // Logs
+  document.getElementById('log-dates').innerHTML = logsRes.map(d =>
+    `<button class="btn" onclick="loadLog('${d}')" style="margin: 2px;">${d}</button>`
+  ).join('');
+  if (logsRes.length > 0) loadLog(logsRes[0]);
+
+  // Offer doc
+  document.getElementById('offer-content').innerHTML = renderMd(offerRes.content);
+
+  // 8-Week Program
+  const weeks = programRes.weeks || {};
+  document.getElementById('program-weeks').innerHTML = Object.entries(weeks).map(([num, w]) => {
+    const isCurrent = parseInt(num) === configRes.week;
+    return `<div class="card" style="${isCurrent ? 'border-color: var(--accent);' : ''}">
+      <h2 style="${isCurrent ? '' : 'color: var(--muted);'}">WEEK ${num}: ${w.theme}</h2>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:12px">${w.goal}</p>
+      <div class="metric-grid" style="margin-bottom:12px">
+        ${Object.entries(w.targets || {}).map(([k, v]) =>
+          `<div class="metric"><div class="metric-value" style="font-size:18px">${v}</div><div class="metric-label">${k.replace(/_/g, ' ')}</div></div>`
+        ).join('')}
+      </div>
+      <p style="font-size:12px;color:var(--green)">Checkpoint: ${w.checkpoint}</p>
+    </div>`;
+  }).join('');
+}
+
+async function approveDraft(filename) {
+  await fetch(`/api/drafts/${filename}/approve`, { method: 'POST' });
+  load();
+}
+
+async function loadLog(date) {
+  const res = await fetch(`/api/log/${date}`).then(r => r.json());
+  document.getElementById('log-content').textContent = res.content;
+}
+
+function showMessage(idx) {
+  const msg = window.outreachMessages[idx];
+  document.getElementById('modalTitle').textContent = `Message to ${msg.name}`;
+  document.getElementById('modalSubject').textContent = msg.subject;
+  document.getElementById('modalBody').textContent = msg.full_body;
+  document.getElementById('messageModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('messageModal').classList.remove('active');
+}
+
+document.getElementById('messageModal').addEventListener('click', (e) => {
+  if (e.target.id === 'messageModal') closeModal();
+});
+
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>
