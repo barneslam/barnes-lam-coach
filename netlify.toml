@@ -4,6 +4,9 @@
   publish = "."
   functions = "daily-rhythm/functions"
 
+[build.environment]
+  SECRETS_SCAN_ENABLED = "false"
+
 [dev]
   command = "node daily-rhythm/dashboard-server.js"
   port = 3001
