@@ -1,8 +1,13 @@
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://qiwdgyilhwkndqkgqruf.supabase.co';
+const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl) {
+  console.error('❌ SUPABASE_URL not found in .env file');
+  process.exit(1);
+}
 
 if (!supabaseKey) {
   console.error('❌ SUPABASE_ANON_KEY not found in .env file');
