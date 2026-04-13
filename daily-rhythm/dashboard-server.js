@@ -291,7 +291,7 @@ async function handleRequest(req, res, body) {
 
   res.writeHead(404);
   res.end(JSON.stringify({ error: 'Not found' }));
-});
+}
 
 // Schedule daily lead discovery at 7am
 const discoverySchedule = cron.schedule('0 7 * * *', async () => {
