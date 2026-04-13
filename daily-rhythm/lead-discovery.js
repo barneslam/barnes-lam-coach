@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { db } = require('./supabase-client');
 
 const BASE_DIR = __dirname;
 
@@ -242,36 +243,48 @@ function updateTrackerWithDiscovery(discoveredLeads) {
   writeJSON(trackerPath, tracker);
 }
 
-// Store discovered leads for dashboard display
-function storeDiscoveredLeads(discoveredLeads) {
-  const discoveredPath = path.join(BASE_DIR, 'discovered-leads.json');
-  const existing = readJSON(discoveredPath);
+// Store discovered leads to Supabase
+async function storeDiscoveredLeads(discoveredLeads) {
   const today = new Date().toISOString().split('T')[0];
 
-  if (!existing[today]) {
-    existing[today] = [];
-  }
+  // Format leads for Supabase
+  const formattedLeads = discoveredLeads.map(lead => ({
+    name: lead.name,
+    company: lead.company,
+    batch: lead.batch || null,
+    revenue: lead.revenue || null,
+    funding_stage: lead.fundingStage || null,
+    trigger: lead.trigger || null,
+    linkedin_url: lead.linkedinUrl || null,
+    confidence: lead.confidence || 'MEDIUM',
+    status: 'discovered',
+    requires_connection_first: true,
+    next_action: 'research_company_and_send_connection_request',
+    discovered_date: today,
+    discovered_at: new Date().toISOString()
+  }));
 
-  // Only add if not already discovered today
-  discoveredLeads.forEach(lead => {
-    const isDuplicate = existing[today].some(e => e.company === lead.company);
-    if (!isDuplicate) {
-      existing[today].push(lead);
+  try {
+    const { data, error } = await db.addDiscoveredLeads(formattedLeads);
+    if (error) {
+      console.error('❌ Error storing leads to Supabase:', error.message);
+    } else {
+      console.log(`✅ Stored ${data?.length || formattedLeads.length} leads to Supabase`);
     }
-  });
-
-  writeJSON(discoveredPath, existing);
+  } catch (e) {
+    console.error('❌ Supabase storage error:', e.message);
+  }
 }
 
 // Run discovery
-function runDiscovery() {
+async function runDiscovery() {
   console.log('\n📊 Starting lead discovery scan...');
   const discoveredLeads = discoverLeads();
 
   if (discoveredLeads.length > 0) {
     logDiscoveryResults(discoveredLeads);
     updateTrackerWithDiscovery(discoveredLeads);
-    storeDiscoveredLeads(discoveredLeads);
+    await storeDiscoveredLeads(discoveredLeads);
     console.log(`✅ Discovered ${discoveredLeads.length} leads`);
     console.log(`⚠️  IMPORTANT: Connection requests must be sent FIRST before any email outreach`);
   } else {

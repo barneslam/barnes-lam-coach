@@ -5,6 +5,7 @@ const path = require('path');
 const http = require('http');
 const cron = require('node-cron');
 const { runDiscovery } = require('./lead-discovery');
+const { db } = require('./supabase-client');
 
 const PORT = 3001;
 const BASE_DIR = __dirname;
@@ -102,30 +103,18 @@ const routes = {
 
   '/api/program': () => readJSON(path.join(BASE_DIR, 'program-8week.json')),
 
-  '/api/outreach': () => {
-    const content = readFile(path.join(BASE_DIR, 'assets/outreach-messages-week1.md'));
-    const outreach = [];
-
-    // Parse Message sections
-    const messageRegex = /## Message \d+: (.+?) — (.+?)\n\n\*\*Signal:\*\* (.+?)\n\*\*Channel:\*\* (.+?)\n\nSubject: (.+?)\n\n([\s\S]+?)(?=---|\Z)/g;
-    let match;
-
-    while ((match = messageRegex.exec(content)) !== null) {
-      const [, name, business, signal, channel, subject, body] = match;
-      outreach.push({
-        name: name.trim(),
-        business: business.trim(),
-        signal: signal.trim(),
-        channel: channel.trim(),
-        subject: subject.trim(),
-        body: body.trim().substring(0, 300),
-        full_body: body.trim(),
-        send_date: '2026-04-15',
-        status: 'scheduled'
-      });
+  '/api/outreach': async () => {
+    try {
+      const { data: outreachData, error } = await db.getOutreachMessages();
+      if (error) {
+        console.error('Error fetching outreach messages:', error);
+        return { outreach: [] };
+      }
+      return { outreach: outreachData || [] };
+    } catch (e) {
+      console.error('Outreach API error:', e.message);
+      return { outreach: [] };
     }
-
-    return { outreach };
   },
 
   '/api/content': () => {
@@ -139,31 +128,28 @@ const routes = {
       }));
   },
 
-  '/api/discovered-leads': () => {
-    const discoveredPath = path.join(BASE_DIR, 'discovered-leads.json');
-    const discovered = readJSON(discoveredPath);
+  '/api/discovered-leads': async () => {
+    try {
+      const { data: leads, error } = await db.getDiscoveredLeads();
+      if (error) {
+        console.error('Error fetching discovered leads:', error);
+        return { leads: [], count: 0, lastDiscoveryDate: null };
+      }
 
-    // Return leads from all days, most recent first
-    const allLeads = [];
-    Object.keys(discovered)
-      .sort()
-      .reverse()
-      .forEach(date => {
-        if (Array.isArray(discovered[date])) {
-          discovered[date].forEach(lead => {
-            allLeads.push({
-              ...lead,
-              discoveredDate: date
-            });
-          });
-        }
-      });
+      // Get the most recent discovery date
+      const lastDiscoveryDate = leads && leads.length > 0
+        ? leads[0].discovered_date
+        : null;
 
-    return {
-      leads: allLeads,
-      count: allLeads.length,
-      lastDiscoveryDate: Object.keys(discovered).sort().reverse()[0] || null
-    };
+      return {
+        leads: leads || [],
+        count: leads?.length || 0,
+        lastDiscoveryDate
+      };
+    } catch (e) {
+      console.error('Discovered leads API error:', e.message);
+      return { leads: [], count: 0, lastDiscoveryDate: null };
+    }
   },
 };
 
@@ -178,7 +164,7 @@ function serveLog(date, callback) {
 }
 
 // HTTP Server
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -202,9 +188,15 @@ const server = http.createServer((req, res) => {
 
   // Handle other API routes
   if (routes[req.url]) {
-    const data = routes[req.url]();
-    res.writeHead(200);
-    res.end(JSON.stringify(data));
+    try {
+      const data = await routes[req.url]();
+      res.writeHead(200);
+      res.end(JSON.stringify(data));
+    } catch (e) {
+      console.error('Route error:', e.message);
+      res.writeHead(500);
+      res.end(JSON.stringify({ error: 'Internal server error' }));
+    }
     return;
   }
 
@@ -222,25 +214,27 @@ const server = http.createServer((req, res) => {
 });
 
 // Schedule daily lead discovery at 7am
-const discoverySchedule = cron.schedule('0 7 * * *', () => {
+const discoverySchedule = cron.schedule('0 7 * * *', async () => {
   console.log('\n🔔 [7am] Running scheduled lead discovery...');
   try {
-    runDiscovery();
+    await runDiscovery();
   } catch (e) {
     console.error('Lead discovery error:', e.message);
   }
 });
 
 // Also run discovery on startup (in case server restarts after 7am)
-const now = new Date();
-if (now.getHours() >= 7) {
-  console.log('⏰ Server started after 7am - running discovery now');
-  try {
-    runDiscovery();
-  } catch (e) {
-    console.error('Lead discovery error:', e.message);
+(async () => {
+  const now = new Date();
+  if (now.getHours() >= 7) {
+    console.log('⏰ Server started after 7am - running discovery now');
+    try {
+      await runDiscovery();
+    } catch (e) {
+      console.error('Lead discovery error:', e.message);
+    }
   }
-}
+})();
 
 server.listen(PORT, () => {
   console.log(`\n✓ GTM Engine Dashboard running on http://localhost:${PORT}\n`);
