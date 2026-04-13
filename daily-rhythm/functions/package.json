@@ -1,0 +1,9 @@
+{
+  "name": "gtm-engine-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for GTM Engine dashboard",
+  "main": "discovered-leads.js",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  }
+}
