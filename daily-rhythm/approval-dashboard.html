@@ -318,6 +318,28 @@
                 checklist_items: 7,
                 status: 'approved'
             }));
+
+            // Log approval to Supabase via API
+            fetch('/api/approval/log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    week: 1,
+                    approved_by: 'user',
+                    checklist_items: 7,
+                    message_count: 7,
+                    notes: 'Week 1 opening - Tuesday deployment'
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('✓ Approval logged to Supabase');
+                }
+            })
+            .catch(err => console.error('Approval logging error:', err));
         }
 
         function resetChecks() {

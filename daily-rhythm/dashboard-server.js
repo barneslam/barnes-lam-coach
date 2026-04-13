@@ -151,6 +151,21 @@ const routes = {
       return { leads: [], count: 0, lastDiscoveryDate: null };
     }
   },
+
+  '/api/approval-status': async (body) => {
+    try {
+      const week = body?.week || 1;
+      const { data, error } = await db.getApprovalStatus(week);
+      if (error) {
+        console.error('Error fetching approval status:', error);
+        return { status: 'pending', error: error.message };
+      }
+      return { status: data?.status || 'pending', data };
+    } catch (e) {
+      console.error('Approval status API error:', e.message);
+      return { status: 'pending', error: e.message };
+    }
+  },
 };
 
 // Serve log file
@@ -176,6 +191,29 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Parse POST body
+  let body = '';
+  if (req.method === 'POST') {
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', async () => {
+      try {
+        const parsedBody = body ? JSON.parse(body) : {};
+        await handleRequest(req, res, parsedBody);
+      } catch (e) {
+        res.writeHead(400);
+        res.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  // Handle GET requests
+  await handleRequest(req, res, {});
+});
+
+async function handleRequest(req, res, body) {
   // Handle /api/log/:date
   if (req.url.startsWith('/api/log/')) {
     const date = req.url.replace('/api/log/', '');
@@ -183,6 +221,39 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200);
       res.end(JSON.stringify(data));
     });
+    return;
+  }
+
+  // Handle /api/approval/log (POST)
+  if (req.url === '/api/approval/log' && req.method === 'POST') {
+    try {
+      const { week, approved_by, checklist_items, message_count, notes } = body;
+      const approvalData = {
+        week: week || 1,
+        approval_date: new Date().toISOString().split('T')[0],
+        approved_at: new Date().toISOString(),
+        status: 'approved',
+        approved_by: approved_by || 'user',
+        checklist_completed: checklist_items || 7,
+        checklist_items: 7,
+        message_count: message_count || 7,
+        approval_notes: notes || '',
+        batch_id: `week-${week}-${Date.now()}`,
+      };
+
+      const { data, error } = await db.logApproval(approvalData);
+      if (error) {
+        res.writeHead(400);
+        res.end(JSON.stringify({ error: error.message }));
+        return;
+      }
+      res.writeHead(200);
+      res.end(JSON.stringify({ success: true, data }));
+    } catch (e) {
+      console.error('Approval logging error:', e.message);
+      res.writeHead(500);
+      res.end(JSON.stringify({ error: e.message }));
+    }
     return;
   }
 
