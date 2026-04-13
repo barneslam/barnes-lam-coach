@@ -25,10 +25,6 @@
     SUPABASE_URL = ""
     SUPABASE_ANON_KEY = ""
 
-# Install dependencies for Netlify Functions
-[[plugins]]
-  package = "@netlify/plugin-functions-install-core"
-
 # Edge functions for real-time data
 [functions]
   directory = "functions"
