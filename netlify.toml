@@ -32,10 +32,7 @@
   status = 200
 
 # Environment variables - Set in Netlify UI under Settings → Build & deploy → Environment
-[env]
-  [env.production]
-    SUPABASE_URL = "https://qiwdgyilhwkndqkgqruf.supabase.co"
-    SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY_HERE"
+# Do not hardcode secrets in this file; configure them in Netlify dashboard instead
 
 # Edge functions for real-time data
 [functions]

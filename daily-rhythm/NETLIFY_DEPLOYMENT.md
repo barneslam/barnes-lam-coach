@@ -27,8 +27,8 @@ Before deploying, add environment variables in Netlify dashboard:
 
 Add these variables:
 ```
-SUPABASE_URL = https://qiwdgyilhwkndqkgqruf.supabase.co
-SUPABASE_ANON_KEY = [your-key-here]
+SUPABASE_URL = https://[your-supabase-url].supabase.co
+SUPABASE_ANON_KEY = [your-anon-key-from-supabase]
 ```
 
 ### 4. Deploy
