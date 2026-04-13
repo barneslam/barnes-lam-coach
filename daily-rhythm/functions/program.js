@@ -1,46 +1,31 @@
-const fs = require('fs');
-const path = require('path');
+// Inline program data for serverless deployment
+const programData = {
+  "program": "8-Week GTM Launch",
+  "start_date": "2026-04-14",
+  "end_date": "2026-06-05",
+  "weeks": {
+    "1": {"theme": "Define the offer, not the brand", "goal": "Have a sellable offer and start conversations before anything looks polished", "auto_tasks": {"mon_tue": ["Auto-generate one-page offer doc (assets/offer-doc.md)", "Auto-generate tracking spreadsheet template (assets/tracking-template.csv)"], "wed_thu": ["Trigger scan: find first 10 targets", "Draft and present first 10 outreach messages", "Outreach channel: email, Twitter DM, or community reply (NOT LinkedIn DM)"], "fri": ["Auto-generate Conor briefing doc (assets/conor-brief.md)", "Prompt operator to schedule 30-min call with Conor"]}, "targets": {"messages_sent": 20, "responses": "3-5", "calls_booked": 0, "revenue": 0}, "checkpoint": "Offer doc exists. 20 messages sent. Conor briefed.", "failure_response": "If <10 messages sent, the system is working but you're not sending. The bottleneck is you, not the engine."},
+    "2": {"theme": "Fill the pipeline", "goal": "Get 3-5 diagnostic conversations on the calendar", "auto_tasks": {"daily": ["Trigger scan + outreach continues (5-8 messages/day)", "Follow-up drafts for week 1 messages", "Collect Conor's 5 warm intros — draft intro request email for him"], "wed": ["Auto-generate diagnostic conversation script (assets/diagnostic-script.md)", "Practice framework: what to ask in the first 15 minutes"], "fri": ["Week 2 scorecard with pipeline value estimate", "If 0 responses: flag positioning problem, suggest offer adjustments"]}, "targets": {"messages_sent": 40, "responses": "5-10", "calls_booked": 2, "revenue": 0}, "checkpoint": "Pipeline has 3-5 warm conversations. Diagnostic script is ready.", "failure_response": "If 0 calls booked: the offer doc needs rewriting. System will auto-draft 3 alternative positioning angles for testing."},
+    "3": {"theme": "Run free diagnostics, prove the value", "goal": "Deliver 2-3 free diagnostic conversations that demonstrate GTM Breakdown Session value", "auto_tasks": {"daily": ["Outreach continues (5-8 messages/day)", "Pre-call research briefs for each diagnostic (auto-generated)", "Post-call summary templates (auto-generated after each call)"], "mid_week": ["Auto-generate case study draft from first diagnostic (anonymized)", "Auto-draft follow-up email for each diagnostic: here's what a paid session covers"], "fri": ["Conversion analysis: which diagnostics are warm for paid session?", "Auto-generate proposal template (assets/proposal-template.md)"]}, "targets": {"messages_sent": 60, "responses": "8-15", "calls_booked": 4, "diagnostics_delivered": 2, "revenue": 0}, "checkpoint": "2+ free diagnostics delivered. At least 1 warm lead for paid session.", "failure_response": "If 0 diagnostics delivered: volume isn't the problem, conversion is. System will analyze all outreach messages vs responses to find what angle is working."},
+    "4": {"theme": "First paid session — make-or-break", "goal": "Convert at least 1 diagnostic into a $750-$1,500 paid GTM Breakdown Session", "auto_tasks": {"mon": ["Auto-rank warm leads by conversion probability", "Draft close email for top 2 leads — specific, references their diagnostic", "Prepare Conor deployment: auto-generate his talking points for close call"], "daily": ["Outreach continues but reduced to 3-5/day — focus shifts to closing", "Session prep materials auto-generated for any booked paid sessions"], "post_session": ["Auto-generate post-session deliverable template", "Auto-draft testimonial request", "Auto-draft case study from session (with permission prompt)"], "fri": ["MAKE-OR-BREAK checkpoint: Did a paid session happen?", "If YES: celebrate, extract what worked, scale it", "If NO: auto-diagnose — pricing? positioning? pipeline? — and recommend specific fix"]}, "targets": {"messages_sent": 75, "responses": "12-20", "calls_booked": 6, "paid_sessions": 1, "revenue": "$750-$1,500"}, "checkpoint": "First revenue. Conor deployed on at least 1 close call.", "failure_response": "If $0 revenue: DO NOT increase volume. Auto-generate 3 hypotheses for why conversion failed (pricing, positioning, audience) and A/B test angles in week 5.", "conor_deployment": {"trigger": "Warm lead agrees to 'learn more about the full session'", "his_role": "Executive peer credibility on the close call — not selling, validating", "prep": "Auto-generated talking points based on the specific lead's situation"}},
+    "5": {"theme": "Systematize what worked", "goal": "Turn week 4 learnings into a repeatable process", "auto_tasks": {"mon": ["Auto-analyze weeks 1-4: which outreach angles converted, which didn't", "Auto-update gtm-profile.json with winning angles, retire losing ones", "Auto-generate 'what's working' report"], "daily": ["Outreach resumes at full volume with optimized angles only", "Follow-up sequences auto-drafted using proven patterns"], "wed": ["Auto-generate content from case study / first session results", "Auto-draft 'social proof' outreach angle using real results"], "fri": ["Pipeline review: how many sessions in next 2 weeks?", "Revenue forecast for weeks 6-8"]}, "targets": {"messages_sent": 95, "responses": "15-25", "calls_booked": 8, "paid_sessions": 2, "revenue": "$1,500-$3,000"}, "checkpoint": "System is self-correcting — winning angles amplified, losing angles dropped."},
+    "6": {"theme": "Scale the session pipeline", "goal": "2 paid sessions this week. Start building waitlist energy.", "auto_tasks": {"daily": ["Outreach at full volume with optimized messaging", "Session prep auto-generated for all booked sessions", "Post-session follow-up automated"], "mid_week": ["Auto-generate digital asset from accumulated sessions (playbook, checklist, or framework)", "Auto-draft 'limited availability' messaging if pipeline is strong"], "fri": ["6-week trajectory report: revenue curve, pipeline health, angle performance", "Conor check-in agenda auto-generated"]}, "targets": {"messages_sent": 115, "responses": "20-30", "paid_sessions": 4, "revenue": "$3,000-$6,000"}, "checkpoint": "Consistent session delivery. Revenue is recurring weekly."},
+    "7": {"theme": "Build the upsell", "goal": "Design the next offer tier — retainer, package, or group format", "auto_tasks": {"mon": ["Auto-analyze all session clients: what do they need AFTER the breakdown?", "Auto-draft 3 upsell offer concepts (retainer, 4-session package, group)", "Present options for operator decision"], "daily": ["Outreach + sessions continue as normal", "Auto-draft upsell proposal for past clients"], "fri": ["Test upsell offer with 2-3 past clients", "Revenue and pipeline report"]}, "targets": {"messages_sent": 135, "responses": "25-35", "paid_sessions": 6, "revenue": "$4,500-$9,000", "upsell_conversations": 2}, "checkpoint": "Upsell offer defined and tested with real clients."},
+    "8": {"theme": "Lock in the operating rhythm permanently", "goal": "System runs on autopilot. Revenue is predictable. Operator focuses on delivery.", "auto_tasks": {"mon": ["Auto-generate full 8-week retrospective", "Auto-calculate: cost per acquisition, average deal size, conversion rates at each stage", "Auto-recommend: what to keep, what to drop, what to change for months 3-4"], "daily": ["Full system continues — scan, outreach, follow-up, content, log", "Begin auto-scheduling outreach in batches (shift from daily to batch processing)"], "fri": ["FINAL 8-WEEK REPORT", "Revenue total, pipeline value, sessions delivered, conversion rates", "System health: is the engine self-sustaining?", "Recommendation: hire, scale, or optimize?"]}, "targets": {"messages_sent": 155, "responses": "30-40", "paid_sessions": 8, "revenue": "$6,000-$12,000", "upsell_revenue": "$2,000-$4,000"}, "checkpoint": "Engine is self-sustaining. Weekly revenue is predictable. Operator can focus on delivery, not prospecting.", "graduation": "If revenue target hit: you've built a business, not a side project. The daily rhythm IS the business."}
+  },
+  "auto_progression": {"enabled": true, "rule": "System auto-advances week number in config.json every Monday at 6:50 AM", "behavior_shift": "Each week, the Build/Deliver block and outreach templates automatically adapt to the current week's theme and tasks"},
+  "failure_protocol": {"week_4_no_revenue": "Pause outreach volume. Auto-diagnose: run analysis on all messages sent vs responses received. Identify top 3 converting angles. Rewrite offer doc. Test new positioning for 1 week before resuming volume.", "week_6_no_momentum": "Auto-generate pivot options: different ICP, different offer format, different price point. Present to operator with data backing each option.", "any_week_zero_messages": "System flags this immediately in the daily log. The engine works — the operator isn't using it."}
+};
 
 exports.handler = async (event, context) => {
-  try {
-    // Try multiple possible paths in Netlify Function environment
-    const possiblePaths = [
-      path.join(__dirname, '../program-8week.json'),
-      path.join(process.env.LAMBDA_TASK_ROOT || '', 'program-8week.json'),
-      '/var/task/program-8week.json'
-    ];
-
-    let programData = null;
-    for (const filepath of possiblePaths) {
-      try {
-        const content = fs.readFileSync(filepath, 'utf8');
-        programData = JSON.parse(content);
-        break;
-      } catch (e) {
-        // Try next path
-      }
+  return {
+    statusCode: 200,
+    body: JSON.stringify(programData),
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type'
     }
-
-    if (!programData) {
-      throw new Error('Program file not found in any expected location');
-    }
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(programData),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      }
-    };
-  } catch (error) {
-    console.error('Error reading program:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
-      headers: { 'Content-Type': 'application/json' }
-    };
-  }
+  };
 };

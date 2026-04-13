@@ -13,6 +13,7 @@
   from = "/"
   to = "/dashboard.html"
   status = 200
+  force = true
 
 # Serve approval dashboard
 [[redirects]]
