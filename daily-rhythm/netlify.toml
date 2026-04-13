@@ -33,29 +33,6 @@
 # Environment variables - Set in Netlify UI under Settings → Build & deploy → Environment
 # SUPABASE_URL and SUPABASE_ANON_KEY must be configured in Netlify dashboard
 
-# Serve dashboard.html as the homepage
-[[redirects]]
-  from = "/"
-  to = "/dashboard.html"
-  status = 200
-
-# Serve approval dashboard
-[[redirects]]
-  from = "/approval"
-  to = "/approval-dashboard.html"
-  status = 200
-
-[[redirects]]
-  from = "/approval.html"
-  to = "/approval-dashboard.html"
-  status = 200
-
-# Redirect all API calls to Netlify Functions
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
 # Edge functions for real-time data
 [functions]
   directory = "functions"
