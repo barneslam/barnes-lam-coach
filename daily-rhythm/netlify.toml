@@ -1,0 +1,24 @@
+[build]
+  command = "echo 'Dashboard ready for deployment'"
+  publish = "."
+  functions = "functions"
+
+[dev]
+  command = "node dashboard-server.js"
+  port = 3001
+
+# Redirect all API calls to Netlify Functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Environment variables
+[env]
+  [env.production]
+    SUPABASE_URL = ""
+    SUPABASE_ANON_KEY = ""
+
+# Edge functions for real-time data
+[functions]
+  directory = "functions"
