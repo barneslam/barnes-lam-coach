@@ -34,6 +34,11 @@
 # Environment variables - Set in Netlify UI under Settings → Build & deploy → Environment
 # Do not hardcode secrets in this file; configure them in Netlify dashboard instead
 
+# Secrets scanning configuration
+# SUPABASE_URL is a public API endpoint, not a secret - exclude from scanning
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL"
+
 # Edge functions for real-time data
 [functions]
   directory = "daily-rhythm/functions"
