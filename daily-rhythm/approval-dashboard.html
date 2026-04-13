@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTM Outreach Approval — Week 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        .status-banner {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        .status-banner.pending {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+        }
+        .status-banner.approved {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .message-card {
+            background: #f9f9f9;
+            border-left: 3px solid #333;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+        }
+        .message-card .target {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .message-card .platform {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+        .message-card .text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            font-style: italic;
+            padding: 10px 0;
+        }
+        .checklist {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .checklist-item input {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .checklist-item label {
+            cursor: pointer;
+            font-size: 14px;
+            flex: 1;
+        }
+        .approval-section {
+            background: #f0f0f0;
+            padding: 30px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .approval-section h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .approval-section p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+        .btn-approve:hover:not(:disabled) {
+            background: #218838;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .btn-approve:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .btn-reset {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-reset:hover {
+            background: #5a6268;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: #999;
+            margin-top: 15px;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .info-box p {
+            color: #1565c0;
+            font-size: 14px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GTM Outreach Approval</h1>
+            <p>Week 1 Opening — 7 messages ready for Tuesday 2026-04-15, 8:00 AM deployment</p>
+        </div>
+
+        <div id="statusBanner" class="status-banner pending">
+            ⏳ PENDING APPROVAL — Review messages below, check all items, then approve to deploy
+        </div>
+
+        <div class="info-box">
+            <p><strong>Send Configuration:</strong> From: barnes@thestrategypitch.com | Platform: Indie Hackers DM (6) + Email (1) | Time: Tuesday 8:00 AM</p>
+        </div>
+
+        <!-- INDIE HACKERS DM SECTION -->
+        <div class="section">
+            <div class="section-title">Indie Hackers DM (6 Messages)</div>
+
+            <div class="message-card">
+                <div class="target">→ Pete (@innov8or)</div>
+                <div class="platform">Indie Hackers DM</div>
+                <div class="text">Hey Pete — saw your post about juggling everything solo. That's the exact moment where most operators lose momentum. The offer doesn't change, but the daily machine stops running. I work with founders at this inflection point. Built a system that shifts this. Worth a quick call to explore?</div>
+            </div>
+
+            <div class="message-card">
+                <div class="target">→ Ian (@ianymu1021)</div>
+                <div class="platform">Indie Hackers DM</div>
+                <div class="text">Ian — building a solution around the accountability gap is smart. But I'd bet the real tension isn't identifying the problem — it's systematizing the daily rhythm to move on it. Not coaching, just a breakdown session. Would that be relevant to validate what's working?</div>
+            </div>
+
+            <div class="message-card">
+                <div class="target">→ Pratham Naik (@naikpratham230)</div>
+                <div class="platform">Indie Hackers DM</div>
+                <div class="text">Pratham — 10 half-built projects isn't a talent problem. It's a rhythm problem. I hit the same wall, then built a daily system that changed it entirely. Not a course, just a 90-minute breakdown that shows founders exactly how to sustain execution past week 3. Interested?</div>
+            </div>
+
+            <div class="message-card">
+                <div class="target">→ Kevin Raetz (@KevinRaetz)</div>
+                <div class="platform">Indie Hackers DM</div>
+                <div class="text">Kevin — looking for weekly accountability is the right instinct. But without the underlying execution system, accountability becomes just another meeting. I help operators build the daily machine that accountability actually sustains. Want to talk through what that looks like?</div>
+            </div>
+
+            <div class="message-card">
+                <div class="target">→ Bernardo (@hey_bernie)</div>
+                <div class="platform">Indie Hackers DM</div>
+                <div class="text">Bernardo — naming consistency as your gap is the hardest part. Most founders blame everything else. I run GTM Breakdown Sessions that reverse-engineer exactly how to make consistency sticky. Not a partnership search, but worth 90 minutes to see if the framework lands?</div>
+            </div>
+
+            <div class="message-card">
+                <div class="target">→ gczh</div>
+                <div class="platform">Indie Hackers DM</div>
+                <div class="text">gczh — I recognize this pattern. Multiple projects, multiple channels, low output per channel. The issue isn't ideas or work ethic — it's daily focus. I help operators systematize around one revenue lever at a time. Want to talk through which lever is actually viable?</div>
+            </div>
+        </div>
+
+        <!-- EMAIL SECTION -->
+        <div class="section">
+            <div class="section-title">Email (1 Message)</div>
+
+            <div class="message-card">
+                <div class="target">→ Aspen (Northern Primrose)</div>
+                <div class="platform">Email</div>
+                <div class="text">Aspen — 650+ hours in meetings while scaling is a symptom, not the problem. Means there's no operating system underneath. I work with CEOs who rebuild the daily rhythm that turns hiring into execution velocity instead of meeting overhead. Would a breakdown session help clarify the shift?</div>
+            </div>
+        </div>
+
+        <!-- APPROVAL CHECKLIST -->
+        <div class="section">
+            <div class="section-title">Pre-Approval Checklist</div>
+            <div class="checklist">
+                <div class="checklist-item">
+                    <input type="checkbox" id="check1">
+                    <label for="check1">All 7 messages reviewed and angles verified</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check2">
+                    <label for="check2">Indie Hackers DM targets confirmed (6 users)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check3">
+                    <label for="check3">Email target confirmed (Aspen, Northern Primrose)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check4">
+                    <label for="check4">Sender email verified (barnes@thestrategypitch.com)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check5">
+                    <label for="check5">Send time locked: Tuesday 8:00 AM 2026-04-15</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check6">
+                    <label for="check6">Response monitoring configured (Gmail inbox)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check7">
+                    <label for="check7">Tracking template updated and ready</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- APPROVAL BUTTON -->
+        <div class="approval-section">
+            <h2>Ready to Deploy?</h2>
+            <p>Check all items above, then click "APPROVE OUTREACH" to confirm deployment.</p>
+            <div class="button-group">
+                <button class="btn-approve" id="approveBtn" onclick="approveOutreach()" disabled>
+                    ✓ APPROVE OUTREACH
+                </button>
+                <button class="btn-reset" onclick="resetChecks()">Reset</button>
+            </div>
+            <div class="timestamp" id="timestamp"></div>
+        </div>
+    </div>
+
+    <script>
+        const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+        const approveBtn = document.getElementById('approveBtn');
+        const statusBanner = document.getElementById('statusBanner');
+        const timestamp = document.getElementById('timestamp');
+
+        function updateApprovalState() {
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            approveBtn.disabled = !allChecked;
+        }
+
+        function approveOutreach() {
+            const now = new Date().toLocaleString();
+            statusBanner.className = 'status-banner approved';
+            statusBanner.innerHTML = `✅ APPROVED — ${now} | Ready for Tuesday 8:00 AM deployment`;
+            approveBtn.disabled = true;
+            approveBtn.textContent = '✓ APPROVED';
+            timestamp.innerHTML = `<strong>Approval logged:</strong> ${now}`;
+
+            // Store approval in localStorage
+            localStorage.setItem('outreach_approved', JSON.stringify({
+                timestamp: now,
+                checklist_items: 7,
+                status: 'approved'
+            }));
+        }
+
+        function resetChecks() {
+            checkboxes.forEach(cb => cb.checked = false);
+            statusBanner.className = 'status-banner pending';
+            statusBanner.innerHTML = '⏳ PENDING APPROVAL — Review messages below, check all items, then approve to deploy';
+            approveBtn.disabled = true;
+            approveBtn.textContent = '✓ APPROVE OUTREACH';
+            timestamp.innerHTML = '';
+            localStorage.removeItem('outreach_approved');
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateApprovalState);
+        });
+
+        // Check if already approved
+        const approved = localStorage.getItem('outreach_approved');
+        if (approved) {
+            const data = JSON.parse(approved);
+            statusBanner.className = 'status-banner approved';
+            statusBanner.innerHTML = `✅ APPROVED — ${data.timestamp} | Ready for Tuesday 8:00 AM deployment`;
+            checkboxes.forEach(cb => cb.checked = true);
+            approveBtn.disabled = true;
+            approveBtn.textContent = '✓ APPROVED';
+            timestamp.innerHTML = `<strong>Last approval:</strong> ${data.timestamp}`;
+        }
+    </script>
+</body>
+</html>

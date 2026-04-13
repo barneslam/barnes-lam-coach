@@ -209,6 +209,15 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Serve approval dashboard
+  if (req.url === '/approval' || req.url === '/approval.html') {
+    const approvalContent = readFile(path.join(BASE_DIR, 'approval-dashboard.html'));
+    res.setHeader('Content-Type', 'text/html');
+    res.writeHead(200);
+    res.end(approvalContent);
+    return;
+  }
+
   res.writeHead(404);
   res.end(JSON.stringify({ error: 'Not found' }));
 });
