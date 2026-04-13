@@ -7,6 +7,12 @@
   command = "node dashboard-server.js"
   port = 3001
 
+# Serve dashboard.html as the homepage
+[[redirects]]
+  from = "/"
+  to = "/dashboard.html"
+  status = 200
+
 # Redirect all API calls to Netlify Functions
 [[redirects]]
   from = "/api/*"
