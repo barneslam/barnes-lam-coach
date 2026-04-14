@@ -1,30 +1,12 @@
 [build]
   command = "echo 'Dashboard ready for deployment'"
-  publish = "."
+  publish = "netlify"
   functions = "functions"
   environment = { SECRETS_SCAN_ENABLED = "false" }
 
 [dev]
   command = "node dashboard-server.js"
   port = 3001
-
-# Serve dashboard.html as the homepage
-[[redirects]]
-  from = "/"
-  to = "/dashboard.html"
-  status = 200
-  force = true
-
-# Serve approval dashboard
-[[redirects]]
-  from = "/approval"
-  to = "/approval-dashboard.html"
-  status = 200
-
-[[redirects]]
-  from = "/approval.html"
-  to = "/approval-dashboard.html"
-  status = 200
 
 # Redirect all API calls to Netlify Functions
 [[redirects]]
@@ -34,6 +16,17 @@
 
 # Environment variables - Set in Netlify UI under Settings → Build & deploy → Environment
 # SUPABASE_URL and SUPABASE_ANON_KEY must be configured in Netlify dashboard
+
+# Scheduled Functions
+[[scheduled_functions]]
+  function = "publish-scheduler"
+  # Every weekday at 09:00 UTC
+  cron = "0 9 * * 1-5"
+
+[[scheduled_functions]]
+  function = "content-curator"
+  # Every Sunday at 03:00 UTC (Sunday 10pm EST)
+  cron = "0 3 * * 0"
 
 # Edge functions for real-time data
 [functions]
