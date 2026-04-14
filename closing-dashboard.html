@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Closing Engine — Direct DM Pipeline</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fffdf7; --surface: #f5f0e8; --surface2: #ede8de;
+    --border: #d8d0c0; --text: #1a1714; --muted: #6b6560;
+    --accent: #a07828; --accent-light: #c9a84c; --accent-dark: #8a6620;
+    --green: #4a7c59; --red: #a04040; --orange: #c47a1a; --blue: #5a7898;
+    --warm: #7c5a4a; --stage-connect: #5a7898; --stage-warm: #a07828;
+    --stage-discover: #7c5a4a; --stage-ask: #4a7c59;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+
+  header { padding: 20px 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  header h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; color: var(--accent-dark); font-weight: 600; }
+  .header-meta { font-size: 13px; color: var(--muted); }
+
+  .stage-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stage-pill { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
+  .stage-pill.all { background: var(--text); color: var(--bg); }
+  .stage-pill.connect { background: var(--stage-connect); color: #fff; }
+  .stage-pill.warm { background: var(--stage-warm); color: #fff; }
+  .stage-pill.discover { background: var(--stage-discover); color: #fff; }
+  .stage-pill.ask { background: var(--stage-ask); color: #fff; }
+  .stage-pill.booked { background: var(--green); color: #fff; }
+  .stage-pill.inactive { background: var(--surface2); color: var(--muted); border-color: var(--border); }
+  .stage-pill.inactive:hover { border-color: var(--accent); color: var(--accent-dark); }
+
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
+  .metric-value { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--accent-dark); }
+  .metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  .section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 12px; }
+
+  .action-banner { background: #fff8ec; border: 1px solid #e8c97a; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; display: none; }
+  .action-banner.visible { display: block; }
+  .action-banner-title { font-size: 13px; font-weight: 600; color: var(--orange); margin-bottom: 8px; }
+  .action-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .action-tag { background: #fff; border: 1px solid #e8c97a; border-radius: 4px; padding: 4px 10px; font-size: 12px; color: var(--accent-dark); cursor: pointer; }
+  .action-tag:hover { background: #fff8ec; }
+
+  .prospect-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .prospect-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: border-color 0.2s; }
+  .prospect-card:hover { border-color: var(--accent-light); }
+  .prospect-card.urgent { border-left: 3px solid var(--orange); }
+
+  .card-header { padding: 14px 18px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; cursor: pointer; }
+  .card-header:hover { background: rgba(160,120,40,0.03); }
+
+  .card-left { flex: 1; }
+  .prospect-name { font-weight: 700; font-size: 15px; color: var(--accent-dark); margin-bottom: 2px; }
+  .prospect-biz { font-size: 12px; color: var(--muted); }
+  .prospect-signal { font-size: 12px; color: var(--text); margin-top: 4px; font-style: italic; }
+
+  .card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+  .stage-badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stage-badge.connect { background: #e8f0f8; color: var(--stage-connect); }
+  .stage-badge.warm { background: #fdf4e0; color: var(--stage-warm); }
+  .stage-badge.discover { background: #f5ede8; color: var(--stage-discover); }
+  .stage-badge.ask { background: #e8f5ec; color: var(--stage-ask); }
+  .stage-badge.booked { background: #d4edda; color: var(--green); }
+  .days-ago { font-size: 11px; color: var(--muted); }
+  .days-ago.overdue { color: var(--orange); font-weight: 600; }
+
+  .card-body { display: none; border-top: 1px solid var(--border); padding: 16px 18px; }
+  .card-body.open { display: block; }
+
+  .stage-progress { display: flex; gap: 0; margin-bottom: 16px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+  .stage-step { flex: 1; padding: 7px 4px; text-align: center; font-size: 11px; font-weight: 600; color: var(--muted); background: var(--surface2); cursor: pointer; transition: all 0.2s; border-right: 1px solid var(--border); }
+  .stage-step:last-child { border-right: none; }
+  .stage-step.active { color: #fff; }
+  .stage-step.connect.active { background: var(--stage-connect); }
+  .stage-step.warm.active { background: var(--stage-warm); }
+  .stage-step.discover.active { background: var(--stage-discover); }
+  .stage-step.ask.active { background: var(--stage-ask); }
+  .stage-step.booked.active { background: var(--green); }
+  .stage-step:hover:not(.active) { background: var(--surface); color: var(--text); }
+
+  .section-block { margin-bottom: 14px; }
+  .block-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 6px; }
+  .message-box { background: var(--surface2); border-radius: 6px; padding: 12px; font-size: 13px; color: var(--text); line-height: 1.6; white-space: pre-wrap; border: 1px solid var(--border); max-height: 120px; overflow-y: auto; }
+  .next-message-box { background: #fffdf0; border: 1px solid #e8d878; border-radius: 6px; padding: 12px; font-size: 13px; color: var(--text); line-height: 1.6; white-space: pre-wrap; max-height: 140px; overflow-y: auto; }
+  .empty-message { font-size: 13px; color: var(--muted); font-style: italic; }
+
+  .response-input { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-size: 13px; font-family: inherit; background: var(--bg); color: var(--text); resize: vertical; min-height: 60px; }
+  .response-input:focus { outline: none; border-color: var(--accent); }
+
+  .card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .btn { border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 7px 14px; border-radius: 5px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .btn-primary { background: var(--accent-dark); color: #fff; border-color: var(--accent-dark); }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-green { background: var(--green); color: #fff; border-color: var(--green); }
+  .btn-green:hover { background: #3d6b4a; border-color: #3d6b4a; color: #fff; }
+  .btn-copy { background: #e8f0f8; color: var(--stage-connect); border-color: #c5d8eb; }
+  .btn-copy:hover { background: #d0e4f5; }
+
+  .status-select { border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 6px 10px; border-radius: 5px; font-size: 12px; font-family: inherit; cursor: pointer; }
+
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; }
+
+  .toast { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 6px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 1000; pointer-events: none; }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .card-header { flex-direction: column; }
+    .card-right { flex-direction: row; align-items: center; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Closing Engine</h1>
+    <div class="header-meta" id="header-meta">Loading...</div>
+  </header>
+
+  <div class="metrics" id="metrics"></div>
+
+  <div class="action-banner" id="action-banner">
+    <div class="action-banner-title">⚡ Action Required Today</div>
+    <div class="action-items" id="action-items"></div>
+  </div>
+
+  <div class="stage-bar" id="stage-bar">
+    <span class="stage-pill all" onclick="filterStage('all')">All Active</span>
+    <span class="stage-pill connect inactive" onclick="filterStage('connect')">Connect</span>
+    <span class="stage-pill warm inactive" onclick="filterStage('warm')">Warm</span>
+    <span class="stage-pill discover inactive" onclick="filterStage('discover')">Discover</span>
+    <span class="stage-pill ask inactive" onclick="filterStage('ask')">Ask</span>
+    <span class="stage-pill booked inactive" onclick="filterStage('booked')">Booked ✓</span>
+  </div>
+
+  <div class="prospect-list" id="prospect-list">
+    <div class="empty-state">Loading prospects...</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://qiwdgyilhwkndqkgqruf.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpd2RneWlsaHdrbmRxa2dxcnVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwOTc4NDcsImV4cCI6MjA5MTY3Mzg0N30.bEhiitzcDMOpViFFtBhfbUKcHVDah8t7DvsNlTxaOEk';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const ACTIVE_STATUSES = ['connected', 'messaged', 'responded', 'call_booked', 'call_completed', 'proposal_sent'];
+
+const STAGE_SEQUENCE = ['connect', 'warm', 'discover', 'ask', 'booked'];
+const STAGE_LABELS = { connect: 'Connect', warm: 'Warm', discover: 'Discover', ask: 'Ask', booked: 'Booked' };
+
+// Derive closing stage from status
+function stageFromStatus(status, closingStage) {
+  if (closingStage) return closingStage;
+  if (status === 'call_booked' || status === 'call_completed' || status === 'proposal_sent') return 'booked';
+  if (status === 'responded') return 'discover';
+  if (status === 'messaged') return 'warm';
+  if (status === 'connected') return 'warm'; // connected = ready for warm message
+  return 'connect';
+}
+
+// Get next stage message based on current stage
+function getNextMessage(t, currentStage) {
+  if (currentStage === 'connect') return t.connection_note || null;
+  if (currentStage === 'warm' || currentStage === 'discover' || currentStage === 'ask') return t.draft_message || null;
+  return null;
+}
+
+// Stage-aware next action label
+function nextActionLabel(stage) {
+  const map = { connect: 'Send Connect Message', warm: 'Send Warm Message', discover: 'Send Discover Question', ask: 'Send Meeting Ask', booked: 'Meeting Booked ✓' };
+  return map[stage] || '';
+}
+
+// Days since date
+function daysSince(dateStr) {
+  if (!dateStr) return null;
+  const diff = Math.floor((new Date() - new Date(dateStr)) / 86400000);
+  return diff;
+}
+
+let allProspects = [];
+let currentFilter = 'all';
+
+async function loadProspects() {
+  const { data } = await sb.from('gtm_targets')
+    .select('*')
+    .in('status', ACTIVE_STATUSES)
+    .order('priority', { ascending: false });
+
+  allProspects = (data || []).map(t => ({
+    ...t,
+    _stage: stageFromStatus(t.status, t.closing_stage)
+  }));
+
+  renderMetrics();
+  renderActionBanner();
+  renderProspects();
+
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  document.getElementById('header-meta').textContent = `${today} — ${allProspects.length} active prospects`;
+}
+
+function renderMetrics() {
+  const counts = { connect: 0, warm: 0, discover: 0, ask: 0, booked: 0 };
+  allProspects.forEach(t => counts[t._stage] = (counts[t._stage] || 0) + 1);
+
+  document.getElementById('metrics').innerHTML = `
+    <div class="metric"><div class="metric-value">${allProspects.length}</div><div class="metric-label">Active</div></div>
+    <div class="metric"><div class="metric-value" style="color:var(--stage-connect)">${counts.connect}</div><div class="metric-label">Connect</div></div>
+    <div class="metric"><div class="metric-value" style="color:var(--stage-warm)">${counts.warm}</div><div class="metric-label">Warm</div></div>
+    <div class="metric"><div class="metric-value" style="color:var(--stage-discover)">${counts.discover}</div><div class="metric-label">Discover</div></div>
+    <div class="metric"><div class="metric-value" style="color:var(--stage-ask)">${counts.ask}</div><div class="metric-label">Ask</div></div>
+    <div class="metric"><div class="metric-value" style="color:var(--green)">${counts.booked}</div><div class="metric-label">Booked</div></div>
+  `;
+
+  // Update stage filter pills with counts
+  document.querySelectorAll('.stage-pill').forEach(pill => {
+    const stage = pill.className.split(' ').find(c => counts[c] !== undefined);
+    if (stage && counts[stage] !== undefined) {
+      pill.textContent = `${STAGE_LABELS[stage]} (${counts[stage]})`;
+    }
+  });
+}
+
+function renderActionBanner() {
+  // Targets that haven't been updated in 3+ days and aren't booked
+  const overdue = allProspects.filter(t => {
+    if (t._stage === 'booked') return false;
+    const days = daysSince(t.updated_at?.split('T')[0] || t.date_found);
+    return days >= 3;
+  });
+
+  const banner = document.getElementById('action-banner');
+  const items = document.getElementById('action-items');
+
+  if (!overdue.length) { banner.classList.remove('visible'); return; }
+
+  banner.classList.add('visible');
+  items.innerHTML = overdue.map(t => {
+    const days = daysSince(t.updated_at?.split('T')[0] || t.date_found);
+    return `<span class="action-tag" onclick="scrollToProspect(${t.id})">${t.name.split(' ')[0]} — ${days}d ago</span>`;
+  }).join('');
+}
+
+function scrollToProspect(id) {
+  const el = document.getElementById(`prospect-${id}`);
+  if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); openCard(id); }
+}
+
+function filterStage(stage) {
+  currentFilter = stage;
+  document.querySelectorAll('.stage-pill').forEach(p => {
+    const pStage = p.onclick?.toString().match(/'([^']+)'/)?.[1];
+    p.classList.toggle('inactive', pStage !== stage && !(stage === 'all' && pStage === 'all'));
+    if (pStage === stage) {
+      p.classList.remove('inactive');
+      if (stage === 'all') p.className = 'stage-pill all';
+    }
+  });
+  renderProspects();
+}
+
+function renderProspects() {
+  const filtered = currentFilter === 'all'
+    ? allProspects
+    : allProspects.filter(t => t._stage === currentFilter);
+
+  if (!filtered.length) {
+    document.getElementById('prospect-list').innerHTML = '<div class="empty-state">No prospects in this stage yet.</div>';
+    return;
+  }
+
+  document.getElementById('prospect-list').innerHTML = filtered.map(t => {
+    const stage = t._stage;
+    const days = daysSince(t.updated_at?.split('T')[0]);
+    const isOverdue = days >= 3 && stage !== 'booked';
+    const nextMsg = getNextMessage(t, stage);
+    const hasResponse = t.response && t.response.trim();
+
+    return `<div class="prospect-card ${isOverdue ? 'urgent' : ''}" id="prospect-${t.id}">
+      <div class="card-header" onclick="toggleCard(${t.id})">
+        <div class="card-left">
+          <div class="prospect-name">${t.name}</div>
+          <div class="prospect-biz">${t.business || ''}</div>
+          ${t.qual_reason ? `<div class="prospect-signal">${t.qual_reason}</div>` : ''}
+        </div>
+        <div class="card-right">
+          <span class="stage-badge ${stage}">${STAGE_LABELS[stage]}</span>
+          ${days !== null ? `<span class="days-ago ${isOverdue ? 'overdue' : ''}">${days === 0 ? 'today' : days + 'd ago'}</span>` : ''}
+        </div>
+      </div>
+      <div class="card-body" id="body-${t.id}">
+        <!-- Stage Progress -->
+        <div class="stage-progress">
+          ${STAGE_SEQUENCE.map(s => `<div class="stage-step ${s} ${s === stage ? 'active' : ''}" onclick="advanceStage(${t.id}, '${s}')" title="Set stage to ${STAGE_LABELS[s]}">${STAGE_LABELS[s]}</div>`).join('')}
+        </div>
+
+        <!-- Sent Message -->
+        ${t.connection_note ? `<div class="section-block">
+          <div class="block-label">Connect Message Sent</div>
+          <div class="message-box">${escHtml(t.connection_note)}</div>
+        </div>` : ''}
+
+        <!-- Their Response -->
+        <div class="section-block">
+          <div class="block-label">Their Response / Notes</div>
+          ${hasResponse
+            ? `<div class="message-box" style="background:#f0f8f0;border-color:#b8d8bc">${escHtml(t.response)}</div>`
+            : `<textarea class="response-input" id="response-${t.id}" placeholder="Log their reply or notes here..." rows="2">${t.notes || ''}</textarea>`
+          }
+        </div>
+
+        <!-- Next Stage Message -->
+        ${nextMsg ? `<div class="section-block">
+          <div class="block-label">Next: ${nextActionLabel(stage)}</div>
+          <div class="next-message-box" id="next-msg-${t.id}">${escHtml(nextMsg)}</div>
+        </div>` : `<div class="section-block">
+          <div class="block-label">Next: ${nextActionLabel(stage)}</div>
+          <div class="empty-message">No message drafted yet — use Regen in the GTM dashboard to generate one.</div>
+        </div>`}
+
+        <!-- Actions -->
+        <div class="card-actions">
+          ${nextMsg ? `<button class="btn btn-copy" onclick="copyMsg(${t.id})">Copy Message</button>` : ''}
+          ${!hasResponse ? `<button class="btn btn-primary" onclick="saveResponse(${t.id})">Save Notes</button>` : ''}
+          ${stage !== 'booked' ? `<button class="btn btn-green" onclick="markResponded(${t.id})">Mark Responded</button>` : ''}
+          <select class="status-select" onchange="updateStatus(${t.id}, this.value)">
+            ${['connected','messaged','responded','call_booked','call_completed','proposal_sent'].map(s =>
+              `<option value="${s}" ${t.status === s ? 'selected' : ''}>${s.replace(/_/g,' ')}</option>`
+            ).join('')}
+          </select>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function toggleCard(id) {
+  const body = document.getElementById(`body-${id}`);
+  body.classList.toggle('open');
+}
+
+function openCard(id) {
+  document.getElementById(`body-${id}`)?.classList.add('open');
+}
+
+function copyMsg(id) {
+  const el = document.getElementById(`next-msg-${id}`);
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => showToast('Message copied'));
+}
+
+async function saveResponse(id) {
+  const ta = document.getElementById(`response-${id}`);
+  if (!ta) return;
+  const notes = ta.value.trim();
+  await sb.from('gtm_targets').update({ notes, updated_at: new Date().toISOString() }).eq('id', id);
+  showToast('Notes saved');
+  loadProspects();
+}
+
+async function markResponded(id) {
+  await sb.from('gtm_targets').update({ status: 'responded', updated_at: new Date().toISOString() }).eq('id', id);
+  showToast('Marked as responded');
+  loadProspects();
+}
+
+async function updateStatus(id, status) {
+  await sb.from('gtm_targets').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+  showToast('Status updated');
+  loadProspects();
+}
+
+async function advanceStage(id, stage) {
+  // Map stage to appropriate status
+  const statusMap = { connect: 'connected', warm: 'messaged', discover: 'responded', ask: 'responded', booked: 'call_booked' };
+  await sb.from('gtm_targets').update({ closing_stage: stage, status: statusMap[stage] || 'connected', updated_at: new Date().toISOString() }).eq('id', id);
+  showToast(`Stage set to ${STAGE_LABELS[stage]}`);
+  loadProspects();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+loadProspects();
+</script>
+</body>
+</html>
