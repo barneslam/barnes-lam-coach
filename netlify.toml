@@ -1,17 +1,47 @@
 [build]
-  command = "echo 'Closing dashboard ready for deployment'"
-  publish = "."
+  command = "echo 'GTM Engine Dashboard ready for deployment'"
+  publish = "daily-rhythm"
+  functions = "daily-rhythm/functions"
+  environment = { SECRETS_SCAN_ENABLED = "false" }
 
+[dev]
+  command = "node dashboard-server.js"
+  port = 3001
+
+# Redirect all API calls to Netlify Functions
 [[redirects]]
-  from = "/"
-  to = "/closing-dashboard.html"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
 
+# Redirect root to dashboard
+[[redirects]]
+  from = "/"
+  to = "/dashboard.html"
+  status = 200
+
+# Scheduled Functions
+[[scheduled_functions]]
+  function = "publish-scheduler"
+  cron = "0 9 * * 1-5"
+
+[[scheduled_functions]]
+  function = "content-curator"
+  cron = "0 3 * * 0"
+
+[[scheduled_functions]]
+  function = "outreach-scheduler"
+  cron = "*/30 * * * *"
+
+[[scheduled_functions]]
+  function = "blotato-dm-poller"
+  cron = "*/30 * * * *"
+
+# Security headers
 [[headers]]
   for = "/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
-    X-Frame-Options = "DENY"
+    X-Frame-Options = "SAMEORIGIN"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
