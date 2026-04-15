@@ -1,5 +1,6 @@
 [build]
-  command = "cp -r daily-rhythm/* . && echo 'GTM Engine Dashboard ready'"
+  base = "daily-rhythm"
+  command = "echo 'GTM Engine Dashboard ready'"
   publish = "."
   functions = "functions"
 
