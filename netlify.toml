@@ -1,7 +1,7 @@
 [build]
-  command = "cp -r daily-rhythm/* . && echo 'GTM Engine Dashboard ready'"
+  base = "daily-rhythm"
   publish = "."
-  functions = "daily-rhythm/functions"
+  functions = "functions"
 
 [build.environment]
   SECRETS_SCAN_ENABLED = "false"
