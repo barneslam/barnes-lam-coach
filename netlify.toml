@@ -1,6 +1,6 @@
 [build]
   base = "daily-rhythm"
-  functions = "functions"
+  functions = "daily-rhythm/functions"
 
 [build.environment]
   SECRETS_SCAN_ENABLED = "false"
