@@ -1,7 +1,7 @@
 [build]
-  command = "cp -r daily-rhythm/* . && ls -la functions/ | head -5"
+  command = "cp -r daily-rhythm/* . && echo 'GTM Engine Dashboard ready'"
   publish = "."
-  functions = "functions"
+  functions = "daily-rhythm/functions"
 
 [build.environment]
   SECRETS_SCAN_ENABLED = "false"
