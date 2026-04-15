@@ -1,7 +1,7 @@
 [build]
-  command = "cp -r daily-rhythm/* . && echo 'GTM Engine Dashboard ready for deployment'"
-  publish = "."
-  functions = "functions"
+  command = "echo 'GTM Engine Dashboard ready for deployment'"
+  publish = "daily-rhythm"
+  functions = "daily-rhythm/functions"
   environment = { SECRETS_SCAN_ENABLED = "false" }
 
 [dev]
