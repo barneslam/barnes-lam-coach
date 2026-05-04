@@ -75,12 +75,15 @@ exports.handler = async (event) => {
 
         const draftDate = meta.date || filename.match(/carousel-(.+?)\.md/)[1];
 
+        const title = body.split('\n').find(l => l.startsWith('# '))?.replace(/^# /, '') || '';
+
         draftsToSync.push({
           draft_date: draftDate,
           status: meta.status || 'pending',
           content: body,
-          channel: meta.channel || 'instagram,facebook,linkedin',
-          type: meta.type || 'carousel',
+          title,
+          draft_type: meta.type || 'carousel',
+          channel: 'barneslam_co',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         });
@@ -117,9 +120,10 @@ exports.handler = async (event) => {
             .from('gtm_drafts')
             .update({
               content: draft.content,
+              title: draft.title,
               status: draft.status,
               channel: draft.channel,
-              type: draft.type,
+              draft_type: draft.draft_type,
               updated_at: new Date().toISOString()
             })
             .eq('id', existing.id)

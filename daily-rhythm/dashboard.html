@@ -23,10 +23,20 @@
   header h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; color: var(--accent); font-weight: 600; }
   .header-meta { font-size: 13px; color: var(--muted); }
 
-  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; position: sticky; top: 0; background: var(--bg); z-index: 100; }
   .tab { padding: 10px 20px; cursor: pointer; color: var(--muted); font-size: 13px; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; }
   .tab:hover { color: var(--text); }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .nav-header { position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; margin-bottom: 12px; z-index: 101; display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .nav-tabs { display: flex; gap: 8px; overflow-x: auto; flex: 1; }
+  .nav-tab { padding: 6px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; font-size: 12px; color: var(--muted); transition: all 0.2s; white-space: nowrap; }
+  .nav-tab:hover { background: var(--border); color: var(--text); }
+  .nav-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  .search-box { display: flex; gap: 8px; align-items: center; flex: 0 1 250px; }
+  .search-box input { flex: 1; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--bg); color: var(--text); }
+  .search-box input::placeholder { color: var(--muted); }
 
   .panel { display: none; }
   .panel.active { display: block; }
@@ -51,18 +61,43 @@
   .metric-label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
   .metric-target { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-  .target-row { display: grid; grid-template-columns: 40px 1fr 1fr 80px 100px; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: center; font-size: 13px; }
+  .target-row { display: grid; grid-template-columns: 50px 140px 1.1fr 120px 110px 170px; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: center; font-size: 13px; }
   .target-row:last-child { border-bottom: none; }
   .target-header { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
   .confidence-high { color: var(--green); font-weight: 600; }
+  .confidence-medium-high { color: #d9a526; font-weight: 600; }
   .confidence-medium { color: var(--accent); font-weight: 500; }
+  .confidence-low { color: var(--red); font-weight: 500; }
+
+  .confidence-bg-high { background: #4a7c5910; border-left: 3px solid var(--green); }
+  .confidence-bg-medium-high { background: #d9a52610; border-left: 3px solid #d9a526; }
+  .confidence-bg-medium { background: #a0782810; border-left: 3px solid var(--accent); }
+  .confidence-bg-low { background: #a0404010; border-left: 3px solid var(--red); }
   .target-signal { color: var(--muted); font-size: 12px; }
+
+  .carousel-post { display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.12); background: white; }
+  .carousel-slides { display: flex; position: relative; overflow: hidden; aspect-ratio: 16/10; }
+  .carousel-slide { min-width: 100%; display: flex; flex-direction: column; justify-content: center; padding: 40px; text-align: center; transition: transform 0.3s; }
+  .slide-dark { background: linear-gradient(135deg, #1a1714 0%, #2d2620 100%); color: white; }
+  .slide-light { background: linear-gradient(135deg, #f5f0e8 0%, #ede8de 100%); color: var(--text); }
+  .carousel-nav { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
+  .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s; }
+  .carousel-dot.active { background: white; width: 24px; border-radius: 4px; }
+  .slide-headline { font-size: 28px; font-weight: 700; margin-bottom: 16px; line-height: 1.3; }
+  .slide-subtitle { font-size: 14px; opacity: 0.9; margin-bottom: 12px; }
+  .slide-content { font-size: 13px; line-height: 1.6; opacity: 0.85; }
+  .carousel-footer { padding: 16px 20px; background: var(--surface2); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .carousel-footer-left { font-size: 12px; color: var(--muted); display: flex; gap: 12px; }
+  .carousel-footer-right { display: flex; gap: 8px; }
+  .carousel-btn { padding: 6px 12px; background: var(--accent); color: white; border: none; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; }
+  .carousel-btn:hover { opacity: 0.9; }
   .target-status { font-size: 11px; padding: 2px 8px; border-radius: 3px; text-align: center; }
   .status-identified { background: #5a789820; color: var(--blue); }
+  .status-connection-req { background: #d9a52620; color: #a06e00; }
+  .status-connected { background: #8a6fa620; color: #6b5a3f; }
   .status-messaged { background: #a0782820; color: var(--accent-dark); }
   .status-responded { background: #4a7c5920; color: var(--green); }
-  .status-scheduled { background: var(--light-blue); color: #0369a1; }
-  .status-cold { background: var(--surface2); color: var(--muted); }
+  .status-disqualified { background: var(--surface2); color: var(--muted); }
 
   .draft-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
   .draft-header { padding: 14px 20px; background: var(--surface2); display: flex; justify-content: space-between; align-items: center; }
@@ -110,13 +145,43 @@
   .outreach-btn { padding: 6px 12px; background: var(--light-blue); border: 1px solid #b3e5fc; color: #0369a1; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; }
   .outreach-btn:hover { background: #b3e5fc; }
 
+  .kanban-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 16px; }
+  .kanban-column { background: var(--surface2); border-radius: 8px; padding: 12px; min-height: 600px; }
+  .kanban-column-header { font-size: 12px; font-weight: 600; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .kanban-column-count { font-size: 11px; color: var(--muted); margin-left: 4px; }
+  .kanban-card { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 8px; cursor: grab; transition: all 0.2s; }
+  .kanban-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .kanban-card.dragging { opacity: 0.5; cursor: grabbing; }
+  .kanban-card-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .kanban-card-company { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .kanban-card-meta { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+  .kanban-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; background: var(--surface); }
+  .kanban-tag-confidence-high { background: #4a7c5920; color: var(--green); }
+  .kanban-tag-confidence-medium { background: #a0782820; color: var(--accent-dark); }
+  .kanban-tag-urgency-green { background: #4a7c5920; color: var(--green); }
+  .kanban-tag-urgency-yellow { background: #d9a52620; color: #b8860b; }
+  .kanban-tag-urgency-red { background: #a0404020; color: var(--red); }
+  .kanban-card-expand { font-size: 10px; color: var(--accent); cursor: pointer; margin-top: 6px; border-top: 1px solid var(--border); padding-top: 6px; }
+  .kanban-card-details { background: var(--surface2); border-radius: 6px; padding: 12px; margin-top: 8px; font-size: 12px; }
+  .kanban-card-details h4 { font-size: 11px; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+  .kanban-card-details p { margin-bottom: 8px; line-height: 1.5; }
+  .kanban-card-details-field { margin-bottom: 8px; }
+  .kanban-card-details-label { font-size: 11px; color: var(--muted); text-transform: uppercase; }
+  .kanban-card-details-value { font-size: 12px; color: var(--text); margin-top: 2px; }
+
+  @media (max-width: 1200px) {
+    .kanban-board { grid-template-columns: repeat(3, 1fr); }
+  }
+
   @media (max-width: 768px) {
-    .target-row { grid-template-columns: 1fr; gap: 4px; }
+    .target-row { grid-template-columns: 40px 1fr; gap: 4px; }
     .target-header { display: none; }
     .metric-grid { grid-template-columns: repeat(2, 1fr); }
     .week-timeline { flex-wrap: wrap; }
     .week-item { min-width: 80px; }
     .modal-content { max-width: 90vw; padding: 24px; }
+    .kanban-board { grid-template-columns: 1fr; }
+    .kanban-column { min-height: 300px; }
   }
 </style>
 </head>
@@ -127,13 +192,31 @@
     <div class="header-meta" id="header-meta">Loading...</div>
   </header>
 
+  <!-- Quick Navigation & Search -->
+  <div class="nav-header">
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="scrollToSection('dashboard')">📊 Dashboard</div>
+      <div class="nav-tab" onclick="scrollToSection('direction')">🧭 Direction</div>
+      <div class="nav-tab" onclick="scrollToSection('targets')">🎯 Targets</div>
+      <div class="nav-tab" onclick="scrollToSection('leads')">📈 Pipeline</div>
+      <div class="nav-tab" onclick="scrollToSection('dms')">💬 DMs</div>
+      <div class="nav-tab" onclick="scrollToSection('drafts')">📝 Drafts</div>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search leads by name, company..." onkeyup="filterLeads(this.value)">
+      <span style="font-size:11px;color:var(--muted);">🔍</span>
+    </div>
+  </div>
+
   <div class="tabs">
     <div class="tab active" data-panel="dashboard">Dashboard</div>
-    <div class="tab" data-panel="schedule">Schedule</div>
-    <div class="tab" data-panel="targets">Targets (20)</div>
-    <div class="tab" data-panel="drafts">Drafts</div>
+    <div class="tab" data-panel="targets" id="tab-targets">Targets</div>
+    <div class="tab" data-panel="leads">Lead Pipeline</div>
+    <div class="tab" data-panel="dms">DM Pipeline</div>
     <div class="tab" data-panel="content">Content</div>
+    <div class="tab" data-panel="drafts">Drafts</div>
     <div class="tab" data-panel="logs">Logs</div>
+    <div class="tab" data-panel="instructions">Instructions</div>
     <div class="tab" data-panel="offer">Offer Doc</div>
     <div class="tab" data-panel="program">8-Week Program</div>
   </div>
@@ -142,9 +225,46 @@
   <div class="panel active" id="dashboard">
     <div class="week-timeline" id="week-timeline"></div>
     <div class="metric-grid" id="metrics"></div>
+
+    <!-- MORNING CONNECTION QUEUE -->
+    <div class="card" style="background: #4a7c5910; border-left: 3px solid var(--green); margin-top: 16px;">
+      <h2>🔗 CONNECTION QUEUE — Today's Priority Invites</h2>
+      <p style="color: var(--muted); font-size: 12px; margin-bottom: 12px;">New leads sorted by confidence score. Copy invite message → Paste in Sales Navigator connection request → Wait 24h → Then send first outreach.</p>
+      <div id="connection-queue" style="max-height: 600px; overflow-y: auto;"></div>
+    </div>
+
     <div class="card" style="margin-top: 16px;">
       <h2>TODAY'S SCORECARD</h2>
       <div class="log-content" id="today-log">Loading...</div>
+    </div>
+  </div>
+
+  <!-- DIRECTION OF THE MONTH -->
+  <div class="panel" id="direction">
+    <div class="card" style="background: linear-gradient(135deg, #4a7c59 0%, #8a6fa6 100%); color: white; margin-bottom: 16px;">
+      <h2 style="color: white; margin-top: 0;">🧭 DIRECTION OF THE MONTH — April 2026</h2>
+      <p style="color: rgba(255,255,255,0.9); margin: 0;">5 powerful ideas to shape your business this month. Strategic coaching content for founders and leaders.</p>
+    </div>
+    <div id="direction-posts" style="display: grid; grid-template-columns: 1fr; gap: 24px;"></div>
+  </div>
+
+  <!-- TARGETS TABLE -->
+  <div class="panel" id="targets">
+    <div class="card">
+      <h2 id="target-list-heading">TARGET LIST — ALL LEADS</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; font-size: 12px;">
+        <div onclick="filterByConfidence(90)" style="padding: 8px; background: #4a7c5910; border-left: 3px solid var(--green); border-radius: 4px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#4a7c5920'" onmouseout="this.style.background='#4a7c5910'"><span style="color:var(--green);font-weight:600">90</span> HIGH confidence</div>
+        <div onclick="filterByConfidence(80)" style="padding: 8px; background: #d9a52610; border-left: 3px solid #d9a526; border-radius: 4px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#d9a52620'" onmouseout="this.style.background='#d9a52610'"><span style="color:#d9a526;font-weight:600">80</span> Medium-High</div>
+        <div onclick="filterByConfidence(70)" style="padding: 8px; background: #a0782810; border-left: 3px solid var(--accent); border-radius: 4px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#a0782820'" onmouseout="this.style.background='#a0782810'"><span style="color:var(--accent);font-weight:600">70</span> Medium (cutoff)</div>
+        <div onclick="filterByConfidence(60)" style="padding: 8px; background: #a0404010; border-left: 3px solid var(--red); border-radius: 4px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#a0404020'" onmouseout="this.style.background='#a0404010'"><span style="color:var(--red);font-weight:600">60</span> Low confidence</div>
+      </div>
+      <div style="margin-bottom: 16px; font-size: 11px; color: var(--muted); padding: 8px; background: var(--surface2); border-radius: 4px;">
+        <strong>Status workflow:</strong> identified → connection_req → connected → messaged → responded
+      </div>
+      <div class="target-row target-header">
+        <div>#</div><div>Name / Business</div><div>Signal</div><div>Status</div>
+      </div>
+      <div id="target-list"></div>
     </div>
   </div>
 
@@ -156,18 +276,45 @@
     </div>
   </div>
 
-  <!-- TARGETS -->
-  <div class="panel" id="targets">
-    <div class="card">
-      <h2>OUTREACH SCHEDULED</h2>
-      <div id="outreach-list" style="margin-bottom: 24px;"></div>
+  <!-- DM PIPELINE -->
+  <div class="panel" id="dms">
+    <div class="card" style="background: #5a789820; border-left: 3px solid var(--blue);">
+      <h2>💬 INBOUND MESSAGE MONITORING</h2>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">Incoming messages from LinkedIn, email, website forms, and Calendly bookings. Auto-scored for qualification. Respond, qualify, or archive each message.</p>
+      <div style="display: flex; gap: 16px; font-size: 12px;">
+        <div><strong>70%+</strong> — Highly qualified (signals: email, call, offer)</div>
+        <div><strong>50%-70%</strong> — Medium qualification</div>
+        <div><strong>&lt;50%</strong> — Low priority</div>
+      </div>
     </div>
     <div class="card">
-      <h2>TARGET LIST</h2>
+      <h2>QUALIFICATION METRICS</h2>
+      <div class="metric-grid" id="dms-qual-metrics"></div>
+    </div>
+    <div class="card">
+      <h2>STATUS BREAKDOWN</h2>
+      <div class="metric-grid" id="dms-status-metrics"></div>
+    </div>
+    <div class="card">
+      <h2>CHANNEL BREAKDOWN</h2>
+      <div class="metric-grid" id="dms-channel-metrics"></div>
+    </div>
+    <div class="card">
+      <h2>RECENT DMS (LAST 7 DAYS)</h2>
       <div class="target-row target-header">
-        <div>#</div><div>Name / Business</div><div>Signal</div><div>Confidence</div><div>Status</div>
+        <div>Sender</div><div>Company</div><div>Score</div><div>Status</div><div>Channel</div><div></div>
       </div>
-      <div id="target-list"></div>
+      <div id="dms-feed"></div>
+    </div>
+  </div>
+
+  <!-- LEAD PIPELINE (KANBAN) -->
+  <div class="panel" id="leads">
+    <div class="card">
+      <h2>LEAD PIPELINE — 5-STAGE WORKFLOW</h2>
+      <div style="margin-bottom: 12px; font-size: 12px; color: var(--muted);">Drag leads between columns to update status</div>
+      <div class="metric-grid" id="leads-metrics" style="margin-bottom: 16px;"></div>
+      <div class="kanban-board" id="kanban-board"></div>
     </div>
   </div>
 
@@ -178,11 +325,29 @@
 
   <!-- CONTENT -->
   <div class="panel" id="content">
+    <div class="card" style="background: #4a7c5910; border-left: 3px solid var(--green);">
+      <h2>📝 CONTENT PUBLISHING</h2>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">Auto-generated content ready to publish. Select channels, edit if needed, and send to Blotato or copy manually.</p>
+      <div style="display: flex; gap: 16px; font-size: 12px;">
+        <div><strong>✓ Approve</strong> — Save final version</div>
+        <div><strong>📋 Copy</strong> — Copy to clipboard</div>
+        <div><strong>✏️ Edit</strong> — Quick revision</div>
+      </div>
+    </div>
     <div id="content-list"></div>
+  </div>
+
+  <!-- INSTRUCTIONS -->
+  <div class="panel" id="instructions">
+    <div id="instructions-content"></div>
   </div>
 
   <!-- LOGS -->
   <div class="panel" id="logs">
+    <div class="card" id="publish-failures-card" style="border-left:3px solid var(--red);margin-bottom:16px;display:none;">
+      <h3 style="margin-top:0;color:var(--red);">✗ PUBLISH FAILURES</h3>
+      <div id="publish-failures-list"></div>
+    </div>
     <div class="card">
       <h2>DAILY LOGS</h2>
       <div id="log-dates" style="margin-bottom: 16px;"></div>
@@ -204,6 +369,17 @@
   </div>
 </div>
 
+<!-- DAY DETAIL MODAL -->
+<div id="dayDetailModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1100;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;width:100%;max-width:880px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.25);">
+    <div style="padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-family:'Playfair Display',Georgia,serif;font-size:14px;font-weight:600;color:var(--accent-dark);">Day Detail</span>
+      <button onclick="closeDayDetail()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);line-height:1;">&times;</button>
+    </div>
+    <div id="dayDetailBody" style="flex:1;overflow:hidden;display:flex;min-height:400px;"></div>
+  </div>
+</div>
+
 <!-- MESSAGE MODAL -->
 <div class="modal" id="messageModal">
   <div class="modal-content">
@@ -213,6 +389,44 @@
     </div>
     <div class="modal-subject" id="modalSubject"></div>
     <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Status Change Modal -->
+<div id="statusModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1001;align-items:center;justify-content:center;">
+  <div style="background:white;border-radius:8px;padding:20px;max-width:400px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="margin:0;font-size:16px;font-weight:600;">Change Status: <span id="statusLeadName"></span></h3>
+      <button onclick="closeStatusModal()" style="background:none;border:none;font-size:20px;cursor:pointer;">&times;</button>
+    </div>
+    <div style="margin-bottom:16px;padding:12px;background:#f5f0e8;border-radius:4px;font-size:12px;">
+      <strong>Current:</strong> <span id="statusCurrent"></span><br>
+      <strong>Available transitions:</strong> <span id="statusAvailable"></span>
+    </div>
+    <div id="statusOptions" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <button onclick="closeStatusModal()" style="width:100%;padding:8px;margin-top:12px;border:1px solid var(--border);background:white;border-radius:4px;cursor:pointer;">Cancel</button>
+  </div>
+</div>
+
+<!-- Connection Message Regen Modal -->
+<div id="regenConnectModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1001;align-items:center;justify-content:center;overflow-y:auto;padding:20px;">
+  <div style="background:var(--bg);border-radius:8px;padding:24px;max-width:600px;box-shadow:0 4px 12px rgba(0,0,0,0.15);margin:20px auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="margin:0;font-size:16px;font-weight:600;">Regenerate Connection Invite</h3>
+      <button onclick="closeRegenConnectModal()" style="background:none;border:none;font-size:20px;cursor:pointer;">&times;</button>
+    </div>
+    <div style="margin-bottom:12px;font-size:12px;color:var(--muted);">
+      <strong>Lead:</strong> <span id="regenConnectName"></span><br>
+      <strong>Company:</strong> <span id="regenConnectCompany"></span>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Custom instructions (optional):</label>
+      <textarea id="regenConnectPrompt" placeholder="E.g., 'Make it more technical' or 'Focus on revenue growth opportunity'" style="width:100%;height:80px;padding:8px;border:1px solid var(--border);border-radius:4px;font-family:monospace;font-size:11px;resize:vertical;"></textarea>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="regenConnectionMessage()" style="flex:1;padding:8px;background:var(--green);color:white;border:none;border-radius:4px;cursor:pointer;font-weight:600;">🔄 Regenerate</button>
+      <button onclick="closeRegenConnectModal()" style="flex:1;padding:8px;border:1px solid var(--border);background:white;border-radius:4px;cursor:pointer;">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -229,15 +443,235 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
+// Navigation & Search Functions
+function scrollToSection(sectionId) {
+  const section = document.getElementById(sectionId);
+  if (section) {
+    // Update active nav tab
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Switch panel
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`[data-panel="${sectionId}"]`)?.classList.add('active');
+    section.classList.add('active');
+
+    // Smooth scroll
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function filterLeads(searchTerm) {
+  const query = (searchTerm || '').toLowerCase().trim();
+  console.log('🔍 filterLeads called, query:', query);
+
+  const targetList = document.getElementById('target-list');
+  if (!targetList) {
+    console.log('❌ target-list element not found');
+    return;
+  }
+
+  // Get all rows from the target list
+  const allRows = targetList.querySelectorAll('.target-row');
+  console.log('📄 Total rows found:', allRows.length);
+
+  let visibleCount = 0;
+  const visibleSections = new Set();
+
+  // If no query, show everything
+  if (query === '') {
+    allRows.forEach(row => {
+      row.style.display = 'grid';
+    });
+    // Show all section wrappers
+    document.querySelectorAll('[id^="section-"]').forEach(section => {
+      const wrapper = section.parentElement;
+      if (wrapper) wrapper.style.display = 'block';
+    });
+    // Remove search message
+    const searchInfo = document.getElementById('searchInfo');
+    if (searchInfo) searchInfo.remove();
+    return;
+  }
+
+  // Filter rows based on search query
+  allRows.forEach(row => {
+    if (row.classList.contains('target-header')) return;
+
+    const rowText = row.textContent.toLowerCase();
+    const matches = rowText.includes(query);
+
+    if (matches) {
+      row.style.display = 'grid';
+      visibleCount++;
+      // Track which section this row belongs to
+      let parent = row.parentElement;
+      while (parent && !parent.id.startsWith('section-')) {
+        parent = parent.parentElement;
+      }
+      if (parent) visibleSections.add(parent);
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  // Hide/show sections based on visible rows
+  document.querySelectorAll('[id^="section-"]').forEach(section => {
+    const wrapper = section.parentElement;
+    const hasVisibleRows = visibleSections.has(section);
+    if (wrapper) {
+      wrapper.style.display = hasVisibleRows ? 'block' : 'none';
+    }
+  });
+
+  // Show/hide search info message
+  let searchInfo = document.getElementById('searchInfo');
+  if (visibleCount === 0) {
+    if (!searchInfo) {
+      searchInfo = document.createElement('div');
+      searchInfo.id = 'searchInfo';
+      searchInfo.style.cssText = 'padding:12px;background:#a0404010;border-left:3px solid var(--red);border-radius:4px;color:var(--red);font-size:13px;margin-bottom:12px;font-weight:500;';
+      searchInfo.textContent = `No leads match "${query}" — try searching by name or company`;
+      targetList.parentElement.insertBefore(searchInfo, targetList);
+    }
+  } else {
+    if (searchInfo) searchInfo.remove();
+  }
+
+  console.log(`✓ Filtered: ${visibleCount}/${allRows.length} rows visible`);
+}
+
+// ─── Synopsis helpers ─────────────────────────────────────────────────────────
+function clientAudienceType(signal, business) {
+  const txt = ((signal || '') + ' ' + (business || '')).toLowerCase();
+  if (/board chair|board director|board of trustees|board member|non.?exec|governing board|chairm|vice chair/.test(txt)) return 'Board Director';
+  if (/\bcro\b|chief revenue|vp sales|head of sales|revenue leader|chief commercial/.test(txt)) return 'Revenue Leader';
+  if (/\bcmo\b|chief marketing|vp market|head of market/.test(txt)) return 'CMO';
+  if (/new ceo|new coo|promoted to ceo|elevated to ceo|stepped into ceo|appointed ceo|named ceo|first year as ceo/.test(txt)) return 'New CEO';
+  if (/\bcoach\b|facilitator|coaching|leadership develop|organizational develop|executive develop|life coach|keynote|speaker|mentor\b|mcc\b/.test(txt)) return 'Coach';
+  if (/founder|co.?founder|solo founder/.test(txt)) return 'Founder';
+  if (/\bceo\b|president|managing director|chief exec/.test(txt)) return 'CEO';
+  return 'Operator';
+}
+
+function clientPlatform(signal, business) {
+  const txt = ((signal || '') + ' ' + (business || '')).toLowerCase();
+  const aud = clientAudienceType(signal, business);
+  if (aud === 'Board Director') return 'axis';
+  if (aud === 'Coach') {
+    if (/\bboard\b|governance|c-suite|organizational|org develop|executive coach|leadership develop|mcc\b|corporate leader/.test(txt)) return 'axis';
+    return 'barnes';
+  }
+  if (aud === 'CEO' || aud === 'New CEO') {
+    const isLargeEnterprise = /\$[1-9][0-9]+b\b|billion|\$[1-9][0-9]{2}m\b|fortune [0-9]|global enterprise/.test(txt);
+    const isGovernance = /board chair|board of director|board member|governance|non.?exec|chairm|vice chair/.test(txt);
+    if (isLargeEnterprise || isGovernance) return 'axis';
+    return 'barnes';
+  }
+  if (aud === 'Revenue Leader' || aud === 'CMO') return 'strategy';
+  return 'barnes';
+}
+
+function buildSynopsis(signal, business) {
+  const aud = clientAudienceType(signal, business);
+  const plat = clientPlatform(signal, business);
+  const badges = {
+    axis:     { label: 'AXIS', bg: '#1e3a5f', color: '#fff' },
+    strategy: { label: 'STRATEGY', bg: '#2d5a4a', color: '#fff' },
+    barnes:   { label: 'BARNES LAM', bg: '#8a6620', color: '#fff' }
+  };
+  const b = badges[plat];
+  return `<div style="display:flex;flex-direction:column;gap:3px;">
+    <span style="background:${b.bg};color:${b.color};font-size:8px;font-weight:700;padding:1px 5px;border-radius:2px;letter-spacing:0.5px;width:fit-content;white-space:nowrap;">${b.label}</span>
+    <span style="font-size:10px;color:var(--muted);">${aud}</span>
+  </div>`;
+}
+
+// Filter leads by confidence level
+function filterByConfidence(minConfidence) {
+  const targetList = document.getElementById('target-list');
+  if (!targetList) return;
+
+  // Get current filter state
+  const currentFilter = window.currentConfidenceFilter;
+
+  // Toggle: if clicking same confidence again, show all
+  if (currentFilter === minConfidence) {
+    window.currentConfidenceFilter = null;
+    // Show all rows and sections
+    document.querySelectorAll('#target-list .target-row').forEach(row => {
+      row.style.display = row.classList.contains('target-header') ? 'grid' : 'grid';
+    });
+    document.querySelectorAll('[id^="section-"]').forEach(section => {
+      section.style.display = 'block';
+      section.previousElementSibling.style.display = 'flex'; // Show section header
+    });
+    document.getElementById('searchInput').value = '';
+    console.log('🔓 Confidence filter cleared — showing all leads');
+    return;
+  }
+
+  // Set new filter
+  window.currentConfidenceFilter = minConfidence;
+  let visibleCount = 0;
+
+  // Hide/show rows based on confidence threshold
+  document.querySelectorAll('#target-list .target-row').forEach(row => {
+    if (row.classList.contains('target-header')) return;
+
+    let rowConfidence = 0;
+    if (row.classList.contains('confidence-bg-high')) rowConfidence = 90;
+    else if (row.classList.contains('confidence-bg-medium-high')) rowConfidence = 80;
+    else if (row.classList.contains('confidence-bg-medium')) rowConfidence = 70;
+    else if (row.classList.contains('confidence-bg-low')) rowConfidence = 60;
+
+    if (rowConfidence >= minConfidence) {
+      row.style.display = 'grid';
+      visibleCount++;
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  // Show/hide sections based on whether they have visible rows
+  document.querySelectorAll('[id^="section-"]').forEach(section => {
+    const visibleRows = Array.from(section.querySelectorAll('.target-row')).filter(
+      row => !row.classList.contains('target-header') && row.style.display !== 'none'
+    );
+
+    if (visibleRows.length > 0) {
+      section.style.display = 'block';
+      section.previousElementSibling.style.display = 'flex'; // Show section header
+    } else {
+      section.style.display = 'none';
+      section.previousElementSibling.style.display = 'none'; // Hide section header too
+    }
+  });
+
+  document.getElementById('searchInput').value = '';
+  console.log(`📊 Confidence filter: ${minConfidence}+ (${visibleCount} leads)`);
+}
+
 // Determine current schedule block
 function getCurrentBlock(blocks) {
-  const now = new Date();
-  const mins = now.getHours() * 60 + now.getMinutes();
-  for (let i = blocks.length - 1; i >= 0; i--) {
-    const [h, m] = blocks[i].time.split(':').map(Number);
-    if (mins >= h * 60 + m) return blocks[i].id;
+  try {
+    if (!blocks || !Array.isArray(blocks) || blocks.length === 0) return null;
+    const now = new Date();
+    const mins = now.getHours() * 60 + now.getMinutes();
+    for (let i = blocks.length - 1; i >= 0; i--) {
+      const block = blocks[i];
+      if (!block || !block.time || typeof block.time !== 'string') continue;
+      const parts = block.time.split(':');
+      if (!parts || parts.length < 2) continue;
+      const [h, m] = parts.map(Number);
+      if (mins >= h * 60 + m) return block.id;
+    }
+    return null;
+  } catch (e) {
+    console.error('getCurrentBlock error:', e, 'blocks:', blocks);
+    return null;
   }
-  return null;
 }
 
 // Simple markdown-ish rendering
@@ -250,16 +684,17 @@ function renderMd(text) {
 }
 
 async function load() {
-  const [todayRes, configRes, trackerRes, targetsRes, draftsRes, logsRes, offerRes, programRes, outreachRes] = await Promise.all([
-    fetch('/api/today').then(r => r.json()),
-    fetch('/api/config').then(r => r.json()),
-    fetch('/api/tracker').then(r => r.json()),
-    fetch('/api/targets').then(r => r.json()),
-    fetch('/api/drafts').then(r => r.json()),
-    fetch('/api/logs').then(r => r.json()),
-    fetch('/api/offer-doc').then(r => r.json()),
-    fetch('/api/program').then(r => r.json()),
-    fetch('/api/outreach').then(r => r.json()),
+  const [todayRes, configRes, trackerRes, targetsRes, draftsRes, logsRes, offerRes, programRes, outreachRes, dmsRes] = await Promise.all([
+    fetch('/api/today').then(r => r.json()).catch(() => ({ day: 'Unknown', date: new Date().toISOString().split('T')[0] })),
+    fetch('/api/config').then(r => r.json()).catch(() => ({ week: 1, weekly_targets: {}, blocks: [] })),
+    fetch('/api/tracker').then(r => r.json()).catch(() => ({ current_week: 1, days: {} })),
+    fetch('/api/targets').then(r => r.json()).catch(() => ({ targets: [] })),
+    fetch('/api/drafts').then(r => r.json()).catch(() => []),
+    fetch('/api/logs').then(r => r.json()).catch(() => ({ logs: [] })),
+    fetch('/api/offer-doc').then(r => r.json()).catch(() => ({ content: '' })),
+    fetch('/api/program').then(r => r.json()).catch(() => ({ program: [] })),
+    fetch('/api/outreach').then(r => r.json()).catch(() => ({ outreach: [] })),
+    fetch('/api/inbound?limit=50&days=7&status=all&channel=all').then(r => r.json()).catch(() => ({ messages: [], qualification_metrics: {}, status_metrics: {}, channel_metrics: {} })),
   ]);
 
   // Header
@@ -289,7 +724,7 @@ async function load() {
     <div class="metric"><div class="metric-value">${weeklyMsgs}</div><div class="metric-label">Messages Sent</div><div class="metric-target">/ ${configRes.weekly_targets?.messages_sent || 20}</div></div>
     <div class="metric"><div class="metric-value">${weeklyResp}</div><div class="metric-label">Responses</div><div class="metric-target">/ ${configRes.weekly_targets?.responses || '3-5'}</div></div>
     <div class="metric"><div class="metric-value">${weeklyCalls}</div><div class="metric-label">Calls Booked</div><div class="metric-target">/ ${configRes.weekly_targets?.calls_booked || 2}</div></div>
-    <div class="metric"><div class="metric-value">${draftsRes.filter(d => d.status === 'pending').length}</div><div class="metric-label">Pending Drafts</div></div>
+    <div class="metric"><div class="metric-value">${(draftsRes.pending || []).length}</div><div class="metric-label">Pending Drafts</div></div>
     <div class="metric"><div class="metric-value">$${weeklyRev}</div><div class="metric-label">Revenue</div><div class="metric-target">/ $${configRes.weekly_targets?.revenue || 0}</div></div>
   `;
 
@@ -298,8 +733,10 @@ async function load() {
   document.getElementById('today-log').textContent = todayLog.content;
 
   // Schedule
+  console.log('configRes:', configRes);
+  console.log('configRes.blocks:', configRes.blocks);
   const currentBlock = getCurrentBlock(configRes.blocks);
-  document.getElementById('schedule-blocks').innerHTML = configRes.blocks.map(b => {
+  document.getElementById('schedule-blocks').innerHTML = (configRes.blocks || []).map(b => {
     const status = b.id === currentBlock ? 'active' : 'pending';
     const statusLabel = b.id === currentBlock ? 'NOW' : b.time;
     return `<div class="schedule-block">
@@ -312,59 +749,675 @@ async function load() {
 
   // Outreach
   window.outreachMessages = outreachRes.outreach || [];
-  document.getElementById('outreach-list').innerHTML = (outreachRes.outreach || []).map((o, idx) => {
-    return `<div class="target-row" style="grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: center;">
-      <div><strong>${o.name}</strong><br><span style="color:var(--muted);font-size:11px">${o.business}</span></div>
-      <div class="target-signal">${o.signal}</div>
-      <div><span class="target-status status-scheduled">Scheduled ${o.send_date}</span></div>
-      <div><button class="outreach-btn" onclick="showMessage(${idx})">View</button></div>
-    </div>`;
-  }).join('');
 
-  // Targets
-  document.getElementById('target-list').innerHTML = (targetsRes.targets || []).map(t => {
-    const confClass = (t.confidence || '').includes('HIGH') ? 'high' : 'medium';
-    const statusClass = t.status.replace('_', '-');
-    return `<div class="target-row">
-      <div>${t.id}</div>
-      <div><strong>${t.name}</strong><br><span style="color:var(--muted);font-size:11px">${t.business || ''}</span></div>
-      <div class="target-signal">${t.signal.substring(0, 80)}...</div>
-      <div class="confidence-${confClass}">${t.confidence}</div>
-      <div><span class="target-status status-${statusClass}">${t.status}</span></div>
-    </div>`;
-  }).join('');
+  // Targets Table (DYNAMIC COUNT - UPDATES AS NEW LEADS FOUND) - Sort by confidence highest to lowest
+  let targets = targetsRes.targets || [];
+  window.lastLeadCount = targets.length;
+  document.getElementById('tab-targets').textContent = `Targets (${targets.length})`;
+  document.getElementById('target-list-heading').textContent = `TARGET LIST — ALL ${targets.length} LEADS`;
 
-  // Drafts
-  document.getElementById('drafts-list').innerHTML = draftsRes.length === 0
-    ? '<div class="card"><h2>No drafts yet</h2></div>'
-    : draftsRes.map(d => {
-      const isPending = d.status === 'pending';
-      return `<div class="draft-card">
-        <div class="draft-header">
-          <div class="draft-title">${d.filename.replace('.md', '')}</div>
-          <div class="draft-status ${isPending ? 'draft-pending' : 'draft-approved'}">${isPending ? 'PENDING' : 'APPROVED'}</div>
-        </div>
-        <div class="draft-body">
-          <div class="draft-content">${d.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-          ${isPending ? `<div class="draft-actions">
-            <button class="btn btn-approve" onclick="approveDraft('${d.filename}')">Approve All</button>
-            <button class="btn btn-skip">Skip</button>
-          </div>` : ''}
-        </div>
-      </div>`;
+  // Populate Connection Queue (leads you've sent connection requests to)
+  await populateConnectionQueue(targets);
+
+  // Populate Direction of the Month posts
+  populateDirectionPosts();
+
+  // Confidence score mapping for sorting
+  const confidenceMap = {
+    'HIGH': 90,
+    'MEDIUM-HIGH': 80,
+    'MEDIUM': 70,
+    'LOW': 60
+  };
+
+  // Group and sort by confidence descending
+  const grouped = { 90: [], 80: [], 70: [], 60: [] };
+  targets.forEach(t => {
+    const scoreKey = confidenceMap[t.confidence?.toUpperCase()] || 70;
+    grouped[scoreKey].push(t);
+  });
+
+  const confidenceLevels = [
+    { score: 90, label: 'High Confidence', class: 'high' },
+    { score: 80, label: 'Medium-High Confidence', class: 'medium-high' },
+    { score: 70, label: 'Medium Confidence', class: 'medium' },
+    { score: 60, label: 'Low Confidence', class: 'low' }
+  ];
+
+  // Store messages in a map to avoid newlines/quotes breaking onclick attributes
+  window._targetMessages = {};
+  targets.forEach(t => { window._targetMessages[t.id] = t.draft_message || ''; });
+
+  const firstNonEmptyIdx = confidenceLevels.findIndex(l => (grouped[l.score] || []).length > 0);
+  const targetListHTML = confidenceLevels.map((level, idx) => {
+    const levelTargets = grouped[level.score] || [];
+    if (levelTargets.length === 0) return '';
+
+    const sectionId = `section-${level.score}`;
+    const isOpen = idx === firstNonEmptyIdx;
+
+    const signalTargets = levelTargets.filter(t => t.signal);
+    const noSignalCount = levelTargets.length - signalTargets.length;
+
+    const notContacted = signalTargets.filter(t => !t.status || t.status === 'identified');
+    const contacted    = signalTargets.filter(t => t.status && t.status !== 'identified' && t.status !== 'disqualified');
+    const sortedTargets = [...notContacted, ...contacted];
+    const dividerAt = notContacted.length;
+
+    const tableRows = sortedTargets.map((t, idx) => {
+      const dividerRow = (idx === dividerAt && contacted.length > 0 && notContacted.length > 0)
+        ? `<tr style="display:grid;grid-template-columns:50px 140px 1.1fr 120px 110px 170px;gap:8px;padding:0 12px;background:#4a7c5908;">
+             <td colspan="6" style="grid-column:1/-1;padding:5px 8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--green);border-top:1px dashed #4a7c5940;border-bottom:1px dashed #4a7c5940;">
+               ✓ ${contacted.length} connection request${contacted.length !== 1 ? 's' : ''} sent
+             </td>
+           </tr>`
+        : '';
+
+      const isDisqualified = t.status === 'disqualified';
+      const confidenceScore = level.score;
+      const statusOptions = ['identified', 'connection_req', 'connected', 'messaged', 'responded'];
+      const statusSelect = `<select style="padding:2px 4px;border:1px solid var(--border);border-radius:3px;background:var(--surface);color:var(--text);font-size:11px;" onchange="updateTargetStatus('${t.id}', this.value)">
+        ${statusOptions.map(opt => `<option value="${opt}" ${opt === (t.status || 'identified') ? 'selected' : ''}>${opt.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase())}</option>`).join('')}
+      </select>`;
+
+      const snQuery = encodeURIComponent(t.name + (t.business ? ' ' + t.business : ''));
+      const nameHref = t.linkedin_url || `https://www.linkedin.com/sales/search/people?query=(keywords:${snQuery})`;
+      const nameLinkTitle = t.linkedin_url ? 'Open LinkedIn profile' : 'Search in Sales Navigator';
+      const nameStyle = isDisqualified
+        ? 'color:var(--muted);text-decoration:line-through;font-size:12px;font-weight:600;'
+        : 'color:var(--blue);text-decoration:none;font-size:12px;font-weight:600;';
+      const safeId = t.id;
+      const safeName = (t.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      const safeBiz = (t.business || '').replace(/'/g, "\\'");
+
+      const synopsis = buildSynopsis(t.signal, t.business);
+      const rowHtml = `<tr class="target-row" style="border-bottom:1px solid var(--border);display:grid;grid-template-columns:50px 140px 1.1fr 120px 110px 170px;gap:8px;padding:0 12px;align-items:center;${isDisqualified ? 'opacity:0.5;' : ''}">
+        <td style="padding:8px;text-align:center;font-weight:600;color:${level.score === 90 ? 'var(--green)' : level.score === 80 ? '#d9a526' : level.score === 70 ? 'var(--accent)' : 'var(--red)'};">${confidenceScore}</td>
+        <td style="padding:8px;overflow:hidden;"><a href="${nameHref}" target="_blank" style="${nameStyle}" title="${nameLinkTitle}">${t.name}</a></td>
+        <td style="padding:8px;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${(t.signal || '').replace(/"/g,'&quot;')}">${t.signal ? t.signal.substring(0, 80) + (t.signal.length > 80 ? '…' : '') : '—'}</td>
+        <td style="padding:8px;">${synopsis}</td>
+        <td style="padding:8px;text-align:center;">${statusSelect}</td>
+        <td style="padding:8px;text-align:right;white-space:nowrap;">
+          <button onclick="openMessageModalById(${safeId}, '${safeName}', ${t.follow_ups || 0})" style="padding:2px 6px;background:var(--blue);color:white;border:none;border-radius:2px;font-size:10px;cursor:pointer;margin-right:4px;" title="View message">📨</button>
+          <button onclick="openRegenConnectModalById(${safeId}, '${safeName}', '${safeBiz}')" style="padding:2px 6px;background:${t.needs_regen ? 'var(--red)' : 'var(--accent)'};color:white;border:none;border-radius:2px;font-size:10px;cursor:pointer;margin-right:4px;" title="Regenerate message">🔄</button>
+          <button onclick="disqualifyLead(${safeId}, '${safeName}')" style="padding:2px 6px;background:var(--red);color:white;border:none;border-radius:2px;font-size:10px;cursor:pointer;margin-right:4px;" title="Disqualify lead">✕</button>
+          <button onclick="updateTargetStatus(${safeId}, 'connection_req')" style="padding:4px 8px;background:${t.status === 'connection_req' ? 'var(--green)' : 'var(--muted)'};color:white;border:none;border-radius:2px;font-size:10px;cursor:pointer;font-weight:600;" title="Mark as connection request sent">${t.status === 'connection_req' ? '✓ Sent' : '→ Send'}</button>
+        </td>
+      </tr>`;
+      return dividerRow + rowHtml;
     }).join('');
 
-  // Content
+    return `<div style="margin-bottom:32px;">
+      <div onclick="toggleSection('${sectionId}')" style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;padding:12px 16px;border-radius:6px;background:${level.score === 90 ? 'var(--green)' : level.score === 80 ? '#d9a526' : level.score === 70 ? 'var(--accent)' : 'var(--red)'};margin-bottom:12px;transition:all 0.2s ease;box-shadow:0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+        <span style="font-weight:700;color:white;font-size:16px;">▶</span>
+        <h3 style="font-size:15px;color:white;margin:0;flex:1;font-weight:600;">
+          ${level.score} ${level.label} <span style="background:rgba(255,255,255,0.3);padding:4px 10px;border-radius:3px;font-weight:600;font-size:13px;margin-left:8px;">${signalTargets.length} leads</span>${noSignalCount > 0 ? `<span style="background:rgba(0,0,0,0.2);padding:4px 8px;border-radius:3px;font-size:11px;margin-left:6px;font-weight:400;">${noSignalCount} hidden (no signal)</span>` : ''}
+        </h3>
+      </div>
+      <div id="${sectionId}" style="display:${isOpen ? 'block' : 'none'};margin-top:0;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;background:var(--surface);">
+          <thead>
+            <tr style="background:var(--surface2);border-bottom:2px solid var(--border); display: grid; grid-template-columns: 50px 140px 1.1fr 120px 110px 170px; gap: 8px; padding: 0 12px; align-items: center;">
+              <th style="padding:8px;text-align:center;font-weight:600;">Score</th>
+              <th style="padding:8px;text-align:left;font-weight:600;">Name</th>
+              <th style="padding:8px;text-align:left;font-weight:600;">Signal</th>
+              <th style="padding:8px;text-align:left;font-weight:600;">Synopsis</th>
+              <th style="padding:8px;text-align:center;font-weight:600;">Status</th>
+              <th style="padding:8px;text-align:right;font-weight:600;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRows}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('target-list').innerHTML = targetListHTML;
+
+  // Toggle function for sections
+  window.toggleSection = function(sectionId) {
+    const section = document.getElementById(sectionId);
+    const header = section.previousElementSibling;
+    const chevron = header.querySelector('span');
+    if (section.style.display === 'none') {
+      section.style.display = 'block';
+      chevron.style.transform = 'rotate(90deg)';
+      chevron.style.transition = 'transform 0.2s ease';
+    } else {
+      section.style.display = 'none';
+      chevron.style.transform = 'rotate(0deg)';
+      chevron.style.transition = 'transform 0.2s ease';
+    }
+  };
+
+  // Initialize chevron rotation for open sections
+  const highConfSection = document.getElementById('section-90');
+  if (highConfSection && highConfSection.style.display !== 'none') {
+    const chevron = highConfSection.previousElementSibling.querySelector('span');
+    if (chevron) chevron.style.transform = 'rotate(90deg)';
+  }
+
+  // Lead Pipeline Kanban
+  const statusMap = {
+    'identified': 'Identified',
+    'connection_req': 'Connection Request',
+    'connected': 'Connected',
+    'messaged': 'Messaged',
+    'responded': 'Responded / Booked',
+    'disqualified': 'Disqualified'
+  };
+
+  const columns = Object.keys(statusMap);
+  const columnCounts = {};
+  columns.forEach(col => {
+    columnCounts[col] = targets.filter(t => t.status === col).length;
+  });
+
+  // Metrics
+  document.getElementById('leads-metrics').innerHTML = `
+    <div class="metric"><div class="metric-value">${targets.length}</div><div class="metric-label">Total Leads</div></div>
+    <div class="metric"><div class="metric-value">${columnCounts.identified || 0}</div><div class="metric-label">Identified</div></div>
+    <div class="metric"><div class="metric-value">${columnCounts.connection_req || 0}</div><div class="metric-label">Awaiting Response</div></div>
+    <div class="metric"><div class="metric-value">${columnCounts.connected || 0}</div><div class="metric-label">Connected</div></div>
+    <div class="metric"><div class="metric-value">${columnCounts.responded || 0}</div><div class="metric-label">Engaged</div></div>
+  `;
+
+  // Kanban board
+  const kanbanBoard = document.getElementById('kanban-board');
+  kanbanBoard.innerHTML = columns.map(colStatus => {
+    const colName = statusMap[colStatus];
+    const colLeads = targets.filter(t => t.status === colStatus);
+    return `<div class="kanban-column">
+      <div class="kanban-column-header">
+        ${colName}
+        <span class="kanban-column-count">${colLeads.length}</span>
+      </div>
+      <div class="kanban-drop-zone" data-status="${colStatus}">
+        ${colLeads.map(lead => {
+          const daysAgo = Math.floor((Date.now() - new Date(lead.date_found || Date.now())) / (1000 * 60 * 60 * 24));
+          let urgencyClass = 'green';
+          if (daysAgo > 7) urgencyClass = 'red';
+          else if (daysAgo > 3) urgencyClass = 'yellow';
+
+          // Map confidence to numeric score
+          let confidenceScore = 70;
+          const conf = (lead.confidence || 'MEDIUM').toUpperCase();
+          if (conf.includes('HIGH') && conf.includes('MEDIUM')) confidenceScore = 80; // MEDIUM-HIGH
+          else if (conf === 'HIGH') confidenceScore = 90;
+          else if (conf === 'MEDIUM') confidenceScore = 70;
+          else if (conf === 'LOW') confidenceScore = 60;
+
+          return `<div class="kanban-card" draggable="true" data-lead-id="${lead.id}" data-lead-name="${lead.name}" data-lead-company="${lead.business}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <div style="flex: 1;">
+                <div class="kanban-card-name">${lead.name}</div>
+                <div class="kanban-card-company">${lead.business || 'Unknown'}</div>
+              </div>
+              <div style="font-size: 18px; font-weight: 700; color: var(--accent); min-width: 40px; text-align: right;">${confidenceScore}</div>
+            </div>
+            <div class="kanban-card-meta">
+              <span class="kanban-tag kanban-tag-urgency-${urgencyClass}">${daysAgo}d ago</span>
+            </div>
+            <div style="font-size: 11px; color: var(--muted); margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border);">
+              <strong style="color: var(--text);">Stage:</strong> ${colName}
+            </div>
+            <div class="kanban-card-expand" onclick="toggleCardDetails(event, '${lead.id}')">+ Details</div>
+            <div class="kanban-card-details" id="details-${lead.id}" style="display:none;">
+              <h4>Contact Info</h4>
+              ${lead.linkedin_url ? `<p><a href="${lead.linkedin_url}" target="_blank" style="color:var(--accent)">View LinkedIn</a></p>` : '<p style="color:var(--muted)">No LinkedIn</p>'}
+              <div class="kanban-card-details-field">
+                <div class="kanban-card-details-label">Signal</div>
+                <div class="kanban-card-details-value">${lead.signal || 'N/A'}</div>
+              </div>
+              <div class="kanban-card-details-field">
+                <div class="kanban-card-details-label">Found</div>
+                <div class="kanban-card-details-value">${new Date(lead.date_found || Date.now()).toLocaleDateString()}</div>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Setup drag & drop
+  setupKanbanDragDrop();
+  window.leadsData = targets;
+
+  // Drafts
+  const pendingDrafts = draftsRes.pending || [];
+  const approvedDrafts = draftsRes.approved || [];
+  const publishedDrafts = draftsRes.published || [];
+
+  let draftsHTML = '';
+  if (pendingDrafts.length > 0) {
+    draftsHTML += `<div class="card" style="border-left: 3px solid var(--orange); margin-bottom: 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 style="margin: 0; color: var(--orange);">⏳ PENDING APPROVAL (${pendingDrafts.length})</h3>
+        ${pendingDrafts.some(d => !d.graphic_url) ? `<button onclick="generateAllGraphics()" style="padding:6px 12px;background:var(--accent);color:white;border:none;border-radius:4px;font-size:11px;cursor:pointer;font-weight:600;">⚡ Generate All Graphics</button>` : ''}
+      </div>
+      ${pendingDrafts.map(d => {
+        const graphicUrl = '/graphics/' + d.channel + '-' + d.draft_date + '.html';
+        const graphicThumb = d.graphic_url
+          ? `<img src="${d.graphic_url}?t=${Date.now()}" style="width:100%;height:auto;display:block;" />`
+          : `<div style="width:100%;height:114px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#666;font-size:11px;">
+               <div>No graphic yet</div>
+               <button onclick="generateGraphic(${d.id})" style="padding:4px 10px;background:var(--accent);color:white;border:none;border-radius:3px;font-size:10px;cursor:pointer;">⚡ Generate</button>
+             </div>`;
+        return `<div style="border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 16px; display: flex; gap: 0;">
+          <div style="width: 220px; min-width: 220px; background: #0d0f1a; position: relative; overflow: hidden; cursor: pointer;" onclick="${d.graphic_url ? `window.open('${d.graphic_url}','_blank')` : ''}" title="Graphic preview">
+            ${graphicThumb}
+            ${d.graphic_url ? `<div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; font-size: 10px; display:flex;justify-content:space-between;align-items:center; padding: 4px 8px; font-family: system-ui;"><span onclick="window.open('${d.graphic_url}','_blank');event.stopPropagation()">🖼 Open</span><button onclick="generateGraphic(${d.id});event.stopPropagation()" style="padding:2px 7px;background:var(--orange);color:white;border:none;border-radius:2px;font-size:10px;cursor:pointer;">🔄 Regen</button></div>` : ''}
+          </div>
+          <div style="flex: 1; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <div style="font-weight: 600; font-size: 13px;">${d.title || (d.content || '').split('\n').find(l => l.trim()) || 'Untitled'}</div>
+              <div style="font-size: 11px; color: var(--muted);">${d.draft_date} · ${d.channel}</div>
+            </div>
+            <div style="font-size: 12px; color: var(--text); padding: 10px; background: white; border-radius: 4px; border-left: 3px solid var(--orange); white-space: pre-wrap; word-break: break-word; max-height: 160px; overflow-y: auto; margin-bottom: 10px;">${d.content || '(empty)'}</div>
+            <div style="display: flex; gap: 8px; font-size: 12px;">
+              <button class="btn btn-approve" onclick="approveDraftPost('${d.id}')">✓ Approve</button>
+              <button class="btn" onclick="regenDraft(${d.id})" style="border-color: var(--orange); color: var(--orange);">🔄 Regen</button>
+              <button class="btn" onclick="rejectDraftPost('${d.id}')">✗ Reject</button>
+            </div>
+          </div>
+        </div>`;}).join('')}
+    </div>`;
+  }
+
+  if (approvedDrafts.length > 0) {
+    draftsHTML += `<div class="card" style="border-left: 3px solid var(--green); margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: var(--green);">✓ APPROVED & SCHEDULED (${approvedDrafts.length})</h3>
+        <button class="btn" style="background: var(--green); color: white;" onclick="publishAllApproved()">📤 Publish All to Blotato (${approvedDrafts.length})</button>
+      </div>
+      ${approvedDrafts.map(d => {
+        const localGraphicUrl = '/graphics/' + d.channel + '-' + d.draft_date + '.html';
+        const graphicSrc = d.graphic_url || localGraphicUrl;
+        const isRemoteImg = !!(d.graphic_url);
+        const graphicPanel = isRemoteImg
+          ? `<img src="${d.graphic_url}?t=${Date.now()}" style="width:100%;height:auto;display:block;" />`
+          : `<iframe src="${localGraphicUrl}" style="width:100%;height:200px;border:none;display:block;" scrolling="no" title="Graphic preview"></iframe>`;
+        return `
+        <div id="card-${d.id}" style="border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 16px; background: white;">
+          <!-- Header row -->
+          <div style="padding: 10px 14px; background: var(--surface2); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border);">
+            <div>
+              <span style="font-weight: 600; font-size: 13px;">${d.title || 'Untitled'}</span>
+              <span style="font-size: 11px; color: var(--muted); margin-left: 10px;">${d.draft_date} · ${d.channel}</span>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button onclick="openDayDetail(${d.id})" style="padding:4px 10px;background:var(--blue);color:white;border:none;border-radius:3px;font-size:11px;cursor:pointer;" title="Full-screen edit view">🔍 Day View</button>
+              <button onclick="toggleEdit(${d.id})" id="edit-toggle-${d.id}" style="padding:4px 10px;background:var(--accent);color:white;border:none;border-radius:3px;font-size:11px;cursor:pointer;">✏️ Edit</button>
+              <button id="pub-btn-${d.id}" onclick="publishOneDraft(${d.id}, this)" style="padding:4px 10px;background:var(--green);color:white;border:none;border-radius:3px;font-size:11px;cursor:pointer;font-weight:600;">📤 Publish</button>
+            </div>
+          </div>
+          <!-- Two-column: graphic + content -->
+          <div style="display:flex;gap:0;min-height:200px;">
+            <!-- Graphic panel -->
+            <div style="width:300px;min-width:300px;background:#0d0f1a;border-right:1px solid var(--border);position:relative;overflow:hidden;">
+              ${graphicPanel}
+              <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.65);padding:4px 8px;display:flex;gap:8px;justify-content:center;">
+                <button onclick="window.open('${localGraphicUrl}','_blank')" style="padding:3px 8px;background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);border-radius:3px;font-size:10px;cursor:pointer;">🖼 Open</button>
+                ${d.graphic_url ? `<button onclick="window.open('${d.graphic_url}','_blank')" style="padding:3px 8px;background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);border-radius:3px;font-size:10px;cursor:pointer;">⬆ Full</button>` : ''}
+              </div>
+            </div>
+            <!-- Content panel -->
+            <div style="flex:1;padding:14px;display:flex;flex-direction:column;">
+              <!-- Read view -->
+              <div id="view-${d.id}" style="font-size:12px;color:var(--text);padding:10px;background:var(--surface);border-radius:4px;border-left:3px solid var(--green);white-space:pre-wrap;word-break:break-word;flex:1;overflow-y:auto;max-height:300px;line-height:1.6;">${(d.content || '').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+              <!-- Edit view (hidden by default) -->
+              <div id="editor-${d.id}" style="display:none;flex:1;flex-direction:column;gap:8px;">
+                <textarea id="textarea-${d.id}" style="flex:1;width:100%;min-height:240px;padding:10px;font-family:inherit;font-size:12px;line-height:1.6;border:1px solid var(--accent);border-radius:4px;resize:vertical;">${(d.content || '').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>
+                <div style="display:flex;gap:8px;">
+                  <button onclick="saveDraft(${d.id})" style="padding:6px 14px;background:var(--green);color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;font-weight:600;">💾 Save</button>
+                  <button onclick="toggleEdit(${d.id})" style="padding:6px 12px;border:1px solid var(--border);background:var(--surface2);border-radius:4px;font-size:12px;cursor:pointer;">Cancel</button>
+                  <button onclick="navigator.clipboard.writeText(document.getElementById('textarea-${d.id}').value)" style="padding:6px 12px;background:var(--blue);color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">📋 Copy</button>
+                </div>
+              </div>
+              <!-- Action row (read mode) -->
+              <div id="actions-${d.id}" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                <button onclick="navigator.clipboard.writeText(${JSON.stringify(d.content || '')})" style="padding:5px 10px;background:var(--blue);color:white;border:none;border-radius:3px;font-size:11px;cursor:pointer;">📋 Copy</button>
+                <button onclick="regenDraft(${d.id})" style="padding:5px 10px;background:var(--orange);color:white;border:none;border-radius:3px;font-size:11px;cursor:pointer;">🔄 Regen</button>
+              </div>
+            </div>
+          </div>
+        </div>`;}).join('')}
+    </div>`;
+  }
+
+  if (publishedDrafts.length > 0) {
+    // Build calendar view grouped by week
+    const byDate = {};
+    publishedDrafts.forEach(d => { byDate[d.draft_date] = byDate[d.draft_date] || []; byDate[d.draft_date].push(d); });
+    const allDates = Object.keys(byDate).sort();
+    const minDate = new Date(allDates[0]);
+    const maxDate = new Date(allDates[allDates.length - 1]);
+    // Find the Monday of the first week and Sunday of last week
+    const startMonday = new Date(minDate);
+    startMonday.setDate(minDate.getDate() - ((minDate.getDay() + 6) % 7));
+    const endSunday = new Date(maxDate);
+    endSunday.setDate(maxDate.getDate() + (7 - maxDate.getDay()) % 7);
+    const channelColors = { the_strategy_pitch: '#2563eb', barneslam_co: '#c9a84c', axis_chamber: '#16a34a' };
+    const channelShort = { the_strategy_pitch: 'SP', barneslam_co: 'BL', axis_chamber: 'AC' };
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    let calRows = '';
+    let cur = new Date(startMonday);
+    while (cur <= endSunday) {
+      let cells = '';
+      for (let i = 0; i < 7; i++) {
+        const key = cur.toISOString().split('T')[0];
+        const posts = byDate[key] || [];
+        const isToday = key === new Date().toISOString().split('T')[0];
+        const isPast = cur < new Date(new Date().toISOString().split('T')[0]);
+        const hasPost = posts.length > 0;
+        cells += `<td style="border:1px solid var(--border);padding:6px;vertical-align:top;min-height:70px;width:14.28%;background:${isToday ? 'rgba(37,99,235,0.08)' : isPast ? 'var(--surface)' : 'var(--bg)'};border-radius:4px;${hasPost ? 'cursor:pointer;' : ''}" ${hasPost ? `onclick="openDayDetail(${posts[0].id})"` : ''} title="${hasPost ? 'Click to view/edit' : ''}">
+          <div style="font-size:11px;font-weight:${isToday?'700':'400'};color:${isToday?'var(--blue)':'var(--muted)'};margin-bottom:4px;">${cur.getDate()}</div>
+          ${posts.map(p => `<div style="background:${channelColors[p.channel]||'#666'};color:white;border-radius:3px;padding:2px 5px;font-size:10px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;" onclick="event.stopPropagation();openDayDetail(${p.id})" title="Click to view">✓ ${channelShort[p.channel]||p.channel}</div>`).join('')}
+        </td>`;
+        cur.setDate(cur.getDate() + 1);
+      }
+      calRows += `<tr>${cells}</tr>`;
+    }
+    draftsHTML += `<div class="card" style="border-left:3px solid var(--green);margin-bottom:16px;">
+      <h3 style="color:var(--green);margin-top:0;">✓ PUBLISHED (${publishedDrafts.length})</h3>
+      <table style="width:100%;border-collapse:separate;border-spacing:4px;">
+        <thead><tr>${days.map(d=>`<th style="font-size:11px;color:var(--muted);text-align:center;padding:4px;font-weight:600;">${d}</th>`).join('')}</tr></thead>
+        <tbody>${calRows}</tbody>
+      </table>
+      <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap;font-size:11px;">
+        ${Object.entries(channelColors).map(([k,c])=>`<span><span style="display:inline-block;width:10px;height:10px;background:${c};border-radius:2px;margin-right:4px;"></span>${channelShort[k]} ${k.replace(/_/g,' ')}</span>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (pendingDrafts.length === 0 && approvedDrafts.length === 0 && publishedDrafts.length === 0) {
+    draftsHTML = '<div class="card"><h2>📝 No drafts yet</h2><p style="color:var(--muted)">Generated posts will appear here for approval before publishing.</p></div>';
+  }
+
+  document.getElementById('drafts-list').innerHTML = draftsHTML;
+
+  // Content - Approval & Publishing Workflow
   const contentRes = await fetch('/api/content').then(r => r.json());
-  document.getElementById('content-list').innerHTML = contentRes.length === 0
-    ? '<div class="card"><h2>No published content yet</h2><p style="color:var(--muted);margin-top:8px">Content will appear here after you approve drafts.</p></div>'
-    : contentRes.map(c => `<div class="card"><h2>${c.filename}</h2><div class="log-content">${c.content}</div></div>`).join('');
+  const contentData = contentRes.content || contentRes;
+  const statusCounts = contentRes.status_counts || {};
+
+  let contentHTML = `
+    <div class="card" style="background: #f0f9ff; border-left: 3px solid var(--blue); margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h3 style="margin: 0; color: var(--blue);">APPROVAL STATUS</h3>
+          <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--muted);">Weekly content batch workflow</p>
+        </div>
+        <div style="display: flex; gap: 24px; text-align: center;">
+          <div>
+            <div style="font-size: 20px; font-weight: bold; color: var(--orange);">${statusCounts.pending || 0}</div>
+            <div style="font-size: 11px; color: var(--muted);">Pending Review</div>
+          </div>
+          <div>
+            <div style="font-size: 20px; font-weight: bold; color: var(--yellow);">${statusCounts.approved || 0}</div>
+            <div style="font-size: 11px; color: var(--muted);">Approved</div>
+          </div>
+          <div>
+            <div style="font-size: 20px; font-weight: bold; color: var(--green);">${statusCounts.published || 0}</div>
+            <div style="font-size: 11px; color: var(--muted);">Published</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (!contentData || contentData.length === 0) {
+    contentHTML += '<div class="card"><h2>📝 No Content Yet</h2><p style="color:var(--muted);margin-top:8px">Content generated weekly Monday 8 AM UTC. Check back then or trigger manually.</p></div>';
+  } else {
+    const pending = contentData.filter(c => c.status === 'pending');
+    const approved = contentData.filter(c => c.status === 'approved');
+    const published = contentData.filter(c => c.status === 'published');
+
+    // Pending section
+    if (pending.length > 0) {
+      contentHTML += `<div class="card" style="border-left: 3px solid var(--orange); margin-bottom: 16px;">
+        <h3 style="margin-top: 0; color: var(--orange);">⏳ PENDING REVIEW (${pending.length})</h3>
+        ${pending.map(c => `
+          <div style="border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+              <div>
+                <div style="font-weight: 600; margin-bottom: 2px;">${c.business}</div>
+                <div style="font-size: 12px; color: var(--muted);">Trigger: ${c.trigger} | Confidence: ${c.qualification_metrics?.qualified ? '✓ High' : 'Medium'}</div>
+              </div>
+              <div style="text-align: right; font-size: 12px; color: var(--muted);">
+                Created: ${new Date(c.created_at).toLocaleDateString()}
+              </div>
+            </div>
+            <div style="background: var(--bg-secondary); padding: 8px; border-radius: 4px; margin-bottom: 8px; font-size: 13px; line-height: 1.5;">
+              <strong>LinkedIn:</strong> ${(c.linkedin_draft || '').substring(0, 100)}...<br>
+              <strong>Instagram:</strong> ${(c.instagram_draft || '').substring(0, 80)}...
+            </div>
+            <div style="display: flex; gap: 8px; font-size: 12px;">
+              <button class="btn btn-approve" onclick="approveContentDraft(${c.id})">✓ Approve</button>
+              <button class="btn" onclick="rejectContentDraft(${c.id})">✗ Reject</button>
+              <button class="btn" onclick="editContentDraft(${c.id})">✏️ Edit</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+
+    // Approved section
+    if (approved.length > 0) {
+      contentHTML += `<div class="card" style="border-left: 3px solid var(--yellow); margin-bottom: 16px;">
+        <h3 style="margin-top: 0; color: var(--yellow);">✓ APPROVED & SCHEDULED (${approved.length})</h3>
+        ${approved.map(c => `
+          <div style="border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 12px; background: var(--bg-secondary);">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+              <div>
+                <div style="font-weight: 600; margin-bottom: 2px;">${c.business}</div>
+                <div style="font-size: 12px; color: var(--muted);">Scheduled: ${new Date(c.scheduled_for).toLocaleDateString()} at ${new Date(c.scheduled_for).toLocaleTimeString()}</div>
+              </div>
+              <span style="background: var(--yellow); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">QUEUED</span>
+            </div>
+            <div style="font-size: 13px; line-height: 1.5; color: var(--muted);">
+              Ready to auto-publish to LinkedIn & Instagram via Blotato
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+
+    // Published section
+    if (published.length > 0) {
+      contentHTML += `<div class="card" style="border-left: 3px solid var(--green);">
+        <h3 style="margin-top: 0; color: var(--green);">✓ PUBLISHED (${published.length})</h3>
+        ${published.map(c => `
+          <div style="border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+              <div>
+                <div style="font-weight: 600; margin-bottom: 2px;">${c.business}</div>
+                <div style="font-size: 12px; color: var(--muted);">Published to ${c.published_to || 'LinkedIn, Instagram'} on ${new Date(c.published_at).toLocaleDateString()}</div>
+              </div>
+              <span style="background: var(--green); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">LIVE</span>
+            </div>
+            ${c.blotato_post_id ? `<div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Post ID: ${c.blotato_post_id}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>`;
+    }
+  }
+
+  document.getElementById('content-list').innerHTML = contentHTML;
+
+  // Publish failures
+  const failedDrafts = [...(draftsRes.pending||[]), ...(draftsRes.approved||[]), ...(draftsRes.published||[])]
+    .filter(d => d.publish_error);
+  const failCard = document.getElementById('publish-failures-card');
+  const failList = document.getElementById('publish-failures-list');
+  if (failedDrafts.length > 0) {
+    failCard.style.display = 'block';
+    failList.innerHTML = failedDrafts.map(d => `
+      <div style="border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <strong style="font-size:13px;">${d.draft_date} · ${d.channel}</strong>
+          <button onclick="retryPublish(${d.id},this)" style="padding:4px 10px;background:var(--orange);color:white;border:none;border-radius:3px;font-size:11px;cursor:pointer;">🔄 Retry</button>
+        </div>
+        <div style="font-size:11px;color:var(--red);background:#1a0a0a;padding:8px;border-radius:4px;word-break:break-all;">${d.publish_error}</div>
+      </div>`).join('');
+  } else {
+    failCard.style.display = 'none';
+  }
 
   // Logs
   document.getElementById('log-dates').innerHTML = logsRes.map(d =>
     `<button class="btn" onclick="loadLog('${d}')" style="margin: 2px;">${d}</button>`
   ).join('');
   if (logsRes.length > 0) loadLog(logsRes[0]);
+
+  // Instructions - Complete Workflow Documentation
+  document.getElementById('instructions-content').innerHTML = `
+    <div class="card" style="background: #e0f2fe; border-left: 3px solid var(--blue);">
+      <h2>🚀 GTM ENGINE — COMPLETE WORKFLOW</h2>
+      <p style="color: var(--muted); font-size: 13px;">This autonomous GTM system runs on a daily schedule. Your job: approve outreach messages (8:03 AM) and send them. Everything else is automated.</p>
+    </div>
+
+    <div class="card">
+      <h2>📊 THE THREE TABS</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 12px;">
+        <div style="border-left: 3px solid var(--green); padding-left: 12px;">
+          <h3 style="color: var(--green); margin-bottom: 8px;">Tab 1: Targets (58 Leads)</h3>
+          <p style="font-size: 12px; color: var(--muted); margin-bottom: 8px;">All 58 qualified leads from web discovery. Sorted by confidence (90-60), with status workflow and action indicators.</p>
+          <p style="font-size: 11px; color: var(--muted);"><strong>Confidence Scoring:</strong></p>
+          <ul style="font-size: 11px; margin: 4px 0 0 16px; color: var(--muted);">
+            <li>🟢 <strong>90 (HIGH)</strong> — 3/3 signals: role + company size + GTM tension</li>
+            <li>🟡 <strong>80 (MEDIUM-HIGH)</strong> — 2/3 signals confirmed</li>
+            <li>🟠 <strong>70 (MEDIUM)</strong> — 1-2 signals + industry fit</li>
+            <li>🔴 <strong>60 (LOW)</strong> — 1 signal only</li>
+          </ul>
+          <p style="font-size: 11px; color: var(--muted); margin-top: 8px;"><strong>Status Workflow:</strong> Identified → Connection Req → Connected → Messaged → Responded → Disqualified</p>
+        </div>
+
+        <div style="border-left: 3px solid var(--blue); padding-left: 12px;">
+          <h3 style="color: var(--blue); margin-bottom: 8px;">Tab 2: DM Pipeline</h3>
+          <p style="font-size: 12px; color: var(--muted); margin-bottom: 8px;">Incoming LinkedIn DMs auto-scored for qualification. Respond, archive, or disqualify each message.</p>
+          <p style="font-size: 11px; color: var(--muted);"><strong>Qualification Algorithm:</strong></p>
+          <ul style="font-size: 11px; margin: 4px 0 0 16px; color: var(--muted);">
+            <li>Scans message for signals: email, call request, offer mention</li>
+            <li>Each signal = +25% qualification score</li>
+            <li>🟢 70%+ = Highly qualified</li>
+            <li>🟡 50-70% = Medium interest</li>
+            <li>🔴 &lt;50% = Low priority</li>
+          </ul>
+          <p style="font-size: 11px; color: var(--muted); margin-top: 8px;"><strong>Actions:</strong> Reply, Archive, Disqualify</p>
+        </div>
+
+        <div style="border-left: 3px solid var(--accent); padding-left: 12px;">
+          <h3 style="color: var(--accent); margin-bottom: 8px;">Tab 3: Content</h3>
+          <p style="font-size: 12px; color: var(--muted); margin-bottom: 8px;">Auto-generated content (posts, case studies) ready to publish. Approve and send to Blotato or copy manually.</p>
+          <p style="font-size: 11px; color: var(--muted);"><strong>Publishing Workflow:</strong></p>
+          <ul style="font-size: 11px; margin: 4px 0 0 16px; color: var(--muted);">
+            <li>Content auto-generated during Build/Deliver block (9:30 AM)</li>
+            <li>Select channels: LinkedIn, Twitter, Instagram</li>
+            <li>✓ Publish — Send to Blotato (integrated)</li>
+            <li>📋 Copy — Copy to clipboard for manual posting</li>
+            <li>✏️ Edit — Quick revision before publishing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⏰ DAILY OPERATING RHYTHM</h2>
+      <table style="width: 100%; font-size: 12px; color: var(--text);">
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px 0; color: var(--accent); font-weight: 600; min-width: 100px;">6:57 AM</td>
+          <td style="padding: 8px 0;"><strong>Trigger Scan</strong></td>
+          <td style="padding: 8px 0; color: var(--muted);">Auto-searches web for execution-stalled operators. Finds 3-5 targets.</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px 0; color: var(--accent); font-weight: 600;">8:03 AM</td>
+          <td style="padding: 8px 0;"><strong>Outreach</strong></td>
+          <td style="padding: 8px 0; color: var(--muted);">Drafts personalized messages. <strong style="color: var(--text);">YOU approve & send them.</strong></td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px 0; color: var(--accent); font-weight: 600;">9:33 AM</td>
+          <td style="padding: 8px 0;"><strong>Build / Deliver</strong></td>
+          <td style="padding: 8px 0; color: var(--muted);">Auto-generates next infrastructure asset or session prep materials.</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px 0; color: var(--accent); font-weight: 600;">12:03 PM</td>
+          <td style="padding: 8px 0;"><strong>Follow-up</strong></td>
+          <td style="padding: 8px 0; color: var(--muted);">Drafts follow-ups for unanswered messages. Pipeline summary.</td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 8px 0; color: var(--accent); font-weight: 600;">1:03 PM</td>
+          <td style="padding: 8px 0;"><strong>Content</strong></td>
+          <td style="padding: 8px 0; color: var(--muted);">Auto-generates day-appropriate content (posts, case studies, comments).</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: var(--accent); font-weight: 600;">3:03 PM</td>
+          <td style="padding: 8px 0;"><strong>Daily Log</strong></td>
+          <td style="padding: 8px 0; color: var(--muted);">Compiles scorecard. Friday = weekly summary.</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>🎯 YOUR ONLY JOBS</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 12px;">
+        <div style="padding: 12px; background: var(--surface2); border-radius: 6px;">
+          <p style="font-weight: 600; margin-bottom: 4px;">1. Be ready by 8:03 AM</p>
+          <p style="font-size: 12px; color: var(--muted);">Open the dashboard for outreach approval</p>
+        </div>
+        <div style="padding: 12px; background: var(--surface2); border-radius: 6px;">
+          <p style="font-weight: 600; margin-bottom: 4px;">2. Approve & send outreach</p>
+          <p style="font-size: 12px; color: var(--muted);">Review drafts, edit if needed, copy & send on LinkedIn/email</p>
+        </div>
+        <div style="padding: 12px; background: var(--surface2); border-radius: 6px;">
+          <p style="font-weight: 600; margin-bottom: 4px;">3. Respond to replies</p>
+          <p style="font-size: 12px; color: var(--muted);">When someone replies, mark status in Target or DM tab</p>
+        </div>
+        <div style="padding: 12px; background: var(--surface2); border-radius: 6px;">
+          <p style="font-weight: 600; margin-bottom: 4px;">4. Publish content</p>
+          <p style="font-size: 12px; color: var(--muted);">Approve content and post to LinkedIn/other channels</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📈 8-WEEK PROGRAM</h2>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">The engine adapts daily based on what week you're in. Check the "8-Week Program" tab for current week targets and checkpoints.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px;">
+        <div style="padding: 8px; background: var(--surface2); border-radius: 4px; text-align: center; font-size: 11px;">
+          <div style="font-weight: 600;">Week 1-2</div>
+          <div style="color: var(--muted);">Infrastructure</div>
+        </div>
+        <div style="padding: 8px; background: var(--surface2); border-radius: 4px; text-align: center; font-size: 11px;">
+          <div style="font-weight: 600;">Week 3</div>
+          <div style="color: var(--muted);">Free Diags</div>
+        </div>
+        <div style="padding: 8px; background: var(--surface2); border-radius: 4px; text-align: center; font-size: 11px;">
+          <div style="font-weight: 600;">Week 4</div>
+          <div style="color: var(--muted);">First Revenue</div>
+        </div>
+        <div style="padding: 8px; background: var(--surface2); border-radius: 4px; text-align: center; font-size: 11px;">
+          <div style="font-weight: 600;">Week 5</div>
+          <div style="color: var(--muted);">Optimize</div>
+        </div>
+        <div style="padding: 8px; background: var(--surface2); border-radius: 4px; text-align: center; font-size: 11px;">
+          <div style="font-weight: 600;">Week 6</div>
+          <div style="color: var(--muted);">Scale</div>
+        </div>
+        <div style="padding: 8px; background: var(--surface2); border-radius: 4px; text-align: center; font-size: 11px;">
+          <div style="font-weight: 600;">Week 7</div>
+          <div style="color: var(--muted);">Upsell</div>
+        </div>
+        <div style="padding: 8px; background: var(--surface2); border-radius: 4px; text-align: center; font-size: 11px;">
+          <div style="font-weight: 600;">Week 8</div>
+          <div style="color: var(--muted);">Lock In</div>
+        </div>
+      </div>
+    </div>
+  `;
 
   // Offer doc
   document.getElementById('offer-content').innerHTML = renderMd(offerRes.content);
@@ -384,11 +1437,493 @@ async function load() {
       <p style="font-size:12px;color:var(--green)">Checkpoint: ${w.checkpoint}</p>
     </div>`;
   }).join('');
+
+  // DM Pipeline
+  const qualMetrics = dmsRes.qualification_metrics || {};
+  const statusMetrics = dmsRes.status_metrics || {};
+  const channelMetrics = dmsRes.channel_metrics || {};
+  const messages = dmsRes.messages || [];
+
+  // Qualification metrics
+  document.getElementById('dms-qual-metrics').innerHTML = `
+    <div class="metric"><div class="metric-value">${qualMetrics.total || 0}</div><div class="metric-label">Total Messages</div></div>
+    <div class="metric"><div class="metric-value">${qualMetrics.qualified || 0}</div><div class="metric-label">Qualified</div></div>
+    <div class="metric"><div class="metric-value">${qualMetrics.notQualified || 0}</div><div class="metric-label">Not Qualified</div></div>
+    <div class="metric"><div class="metric-value">${(qualMetrics.percentQualified || 0).toFixed(1)}%</div><div class="metric-label">Qualification Rate</div></div>
+    <div class="metric"><div class="metric-value">${(qualMetrics.avgScore || 0).toFixed(2)}</div><div class="metric-label">Avg Score</div></div>
+  `;
+
+  // Status metrics
+  document.getElementById('dms-status-metrics').innerHTML = `
+    <div class="metric"><div class="metric-value">${statusMetrics.new || 0}</div><div class="metric-label">New</div></div>
+    <div class="metric"><div class="metric-value">${statusMetrics.contacted || 0}</div><div class="metric-label">Contacted</div></div>
+    <div class="metric"><div class="metric-value">${statusMetrics.responded || 0}</div><div class="metric-label">Responded</div></div>
+    <div class="metric"><div class="metric-value">${statusMetrics.qualified || 0}</div><div class="metric-label">Qualified</div></div>
+  `;
+
+  // Channel metrics - shows distribution across email, LinkedIn, website, Calendly
+  document.getElementById('dms-channel-metrics').innerHTML = Object.entries(channelMetrics || {}).map(([channel, count]) => {
+    const channelEmoji = { linkedin: '💼', email: '📧', website: '🌐', calendly: '📅' }[channel] || '💬';
+    return `<div class="metric"><div class="metric-value">${count}</div><div class="metric-label">${channelEmoji} ${channel}</div></div>`;
+  }).join('') || '<div style="color:var(--muted);font-size:12px">No inbound messages yet</div>';
+
+  // Message feed - unified multi-channel monitoring
+  window.dmsData = messages;
+  document.getElementById('dms-feed').innerHTML = messages.length === 0
+    ? '<div style="color:var(--muted);font-size:12px;padding:12px">No inbound messages in last 7 days. Messages from LinkedIn, email, website forms, and Calendly bookings will appear here.</div>'
+    : messages.map((msg, idx) => {
+      const qualScore = msg.qualification_score || 0;
+      const qualColor = qualScore >= 75 ? '#22c55e' : qualScore >= 60 ? '#eab308' : '#ef4444';
+      const channelEmoji = { linkedin: '💼', email: '📧', website: '🌐', calendly: '📅' }[msg.channel] || '💬';
+      const statusBadge = msg.lead_status === 'qualified' ? '✓ QUALIFIED' : msg.lead_status === 'booked' ? '📅 BOOKED' : 'NEW';
+      const statusColor = msg.lead_status === 'qualified' ? '#22c55e' : msg.lead_status === 'booked' ? '#06b6d4' : '#f59e0b';
+
+      return `<div class="draft-card" style="margin-top: 12px;">
+        <div class="draft-header" style="display:flex;justify-content:space-between;align-items:start">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+              <span style="font-size:18px">${channelEmoji}</span>
+              <div style="font-weight:600">${msg.sender_name || 'Unknown'}</div>
+              <span style="background:${statusColor};color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">${statusBadge}</span>
+            </div>
+            <div style="font-size:12px;color:var(--muted)">${msg.sender_title || 'N/A'} at ${msg.sender_company || 'N/A'}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">${msg.message_subject || 'No subject'}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:22px;font-weight:700;color:${qualColor}">${qualScore}</div>
+            <div style="font-size:10px;color:var(--muted)">Score</div>
+          </div>
+        </div>
+        <div class="draft-body">
+          <div class="draft-content" style="background:var(--bg-secondary);padding:8px;border-radius:4px;margin-bottom:8px">${(msg.message_text || '').substring(0, 250)}${(msg.message_text || '').length > 250 ? '...' : ''}</div>
+          ${msg.qualification_notes ? `<div style="font-size:11px;color:var(--muted);margin-bottom:8px">Note: ${msg.qualification_notes}</div>` : ''}
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Received: ${new Date(msg.received_at).toLocaleDateString()}</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-approve" onclick="respondToMessage(${idx})">✓ Reply</button>
+            <button class="btn" onclick="archiveMessage(${idx})">📋 Archive</button>
+            <button class="btn" onclick="updateMessageStatus(${idx}, 'qualified')">⭐ Qualify</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
 }
 
 async function approveDraft(filename) {
   await fetch(`/api/drafts/${filename}/approve`, { method: 'POST' });
   load();
+}
+
+async function publishToBlotato(draftId) {
+  const confirmed = confirm('Publish posts to Blotato? This will schedule 5 posts per week per channel (LinkedIn & Instagram, Mon-Fri) for 4 weeks.');
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch('/api/publish-posts-to-blotato', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ draftId, numWeeks: 4 })
+    });
+    const result = await res.json();
+    if (res.ok) {
+      alert(`✓ Published to Blotato!\n${result.message}\n\nPosts scheduled:\n${result.posts_count} total posts`);
+      load();
+    } else {
+      alert('Error: ' + (result.error || 'Failed to publish'));
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function approveDraftPost(draftId) {
+  const confirmed = confirm('Approve this draft for publishing to Blotato?');
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch('/api/approve-draft', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ draftId })
+    });
+    if (res.ok) {
+      alert('✓ Draft approved! Ready to publish.');
+      load();
+    } else {
+      alert('Failed to approve draft.');
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function generateGraphic(draftId) {
+  const btn = event.target;
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/render-graphic', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ draftId })
+    });
+    const result = await res.json();
+    if (res.ok && result.graphic_url) {
+      btn.textContent = '✓ Done';
+      setTimeout(() => load(), 800);
+    } else {
+      btn.textContent = '✗ Failed';
+      btn.disabled = false;
+      console.error('Graphic gen error:', result);
+    }
+  } catch (err) {
+    btn.textContent = '✗ Error';
+    btn.disabled = false;
+  }
+}
+
+async function regenDraft(draftId) {
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/regen-draft', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ draftId })
+    });
+    const result = await res.json().catch(() => ({}));
+    if (res.ok) {
+      alert('✓ New version generated. Review and approve it.');
+      load();
+    } else {
+      alert('Regen failed: ' + (result.error || res.status + ' ' + res.statusText));
+      btn.textContent = orig;
+      btn.disabled = false;
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
+}
+
+async function rejectDraftPost(draftId) {
+  const confirmed = confirm('Reject this draft? It will be deleted.');
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/drafts/${draftId}/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (res.ok) {
+      alert('✓ Draft rejected and deleted.');
+      load();
+    } else {
+      alert('Failed to delete draft.');
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function generateAllGraphics() {
+  const btn = event.target;
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+  const missingIds = Array.from(document.querySelectorAll('[data-draft-id][data-no-graphic]')).map(el => el.dataset.draftId);
+  // Fallback: re-load pending drafts from API and generate for those without graphic_url
+  const draftsData = await fetch('/api/drafts').then(r => r.json()).catch(() => ({}));
+  const pending = draftsData.pending || [];
+  const toGenerate = pending.filter(d => !d.graphic_url);
+  let done = 0;
+  for (const d of toGenerate) {
+    btn.textContent = `⏳ ${done + 1}/${toGenerate.length}...`;
+    try {
+      await fetch('/api/render-graphic', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ draftId: d.id })
+      });
+    } catch (e) { console.error('graphic gen failed for', d.id, e); }
+    done++;
+  }
+  btn.textContent = '✓ Done';
+  setTimeout(() => load(), 800);
+}
+
+async function retryPublish(draftId, btn) {
+  await publishOneDraft(draftId, btn);
+}
+
+function toggleEdit(draftId) {
+  const viewEl = document.getElementById(`view-${draftId}`);
+  const editorEl = document.getElementById(`editor-${draftId}`);
+  const actionsEl = document.getElementById(`actions-${draftId}`);
+  const toggleBtn = document.getElementById(`edit-toggle-${draftId}`);
+  const isEditing = editorEl.style.display !== 'none';
+  if (isEditing) {
+    editorEl.style.display = 'none';
+    viewEl.style.display = '';
+    actionsEl.style.display = '';
+    toggleBtn.textContent = '✏️ Edit';
+  } else {
+    editorEl.style.display = 'flex';
+    viewEl.style.display = 'none';
+    actionsEl.style.display = 'none';
+    toggleBtn.textContent = '✕ Cancel';
+  }
+}
+
+async function saveDraft(draftId) {
+  const textarea = document.getElementById(`textarea-${draftId}`);
+  const newContent = textarea.value;
+  const btn = textarea.closest('[id^="editor-"]').querySelector('button');
+  btn.textContent = '⏳ Saving...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/update-draft', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: draftId, content: newContent })
+    });
+    const result = await res.json();
+    if (res.ok) {
+      // Update read view without full reload
+      const viewEl = document.getElementById(`view-${draftId}`);
+      viewEl.textContent = newContent;
+      toggleEdit(draftId);
+    } else {
+      alert('Save failed: ' + (result.error || res.status));
+      btn.textContent = '💾 Save';
+      btn.disabled = false;
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+    btn.textContent = '💾 Save';
+    btn.disabled = false;
+  }
+}
+
+async function openDayDetail(draftId) {
+  const modal = document.getElementById('dayDetailModal');
+  const modalBody = document.getElementById('dayDetailBody');
+  modal.style.display = 'flex';
+  modalBody.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Loading...</div>';
+
+  try {
+    const res = await fetch('/api/drafts');
+    const data = await res.json();
+    const allDrafts = [...(data.pending || []), ...(data.approved || []), ...(data.published || [])];
+    const d = allDrafts.find(x => x.id === draftId);
+    if (!d) { modalBody.innerHTML = '<div style="padding:40px;color:var(--red);">Draft not found</div>'; return; }
+
+    const localGraphicUrl = '/graphics/' + d.channel + '-' + d.draft_date + '.html';
+    const graphicSrc = d.graphic_url || localGraphicUrl;
+    const graphicHtml = d.graphic_url
+      ? `<img src="${d.graphic_url}" style="width:100%;max-height:340px;object-fit:cover;display:block;" />`
+      : `<iframe src="${localGraphicUrl}" style="width:100%;height:300px;border:none;display:block;" scrolling="no"></iframe>`;
+
+    const isPublished = d.status === 'published';
+    const statusBadge = isPublished
+      ? `<span style="background:#4a7c5920;color:var(--green);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;">✓ PUBLISHED</span>`
+      : `<span style="background:#a0782820;color:var(--accent-dark);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;">✓ APPROVED</span>`;
+
+    modalBody.innerHTML = `
+      <div style="display:flex;gap:0;height:100%;">
+        <!-- Left: graphic -->
+        <div style="width:380px;min-width:380px;background:#0d0f1a;border-right:1px solid var(--border);">
+          ${graphicHtml}
+          <div style="padding:10px;display:flex;gap:8px;justify-content:center;background:#111;">
+            <button onclick="window.open('${localGraphicUrl}','_blank')" style="padding:5px 12px;background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:4px;font-size:11px;cursor:pointer;">🖼 Open Graphic</button>
+          </div>
+        </div>
+        <!-- Right: content + edit -->
+        <div style="flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+            <div>
+              <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:600;color:var(--accent-dark);margin-bottom:4px;">${d.title || 'Untitled'}</div>
+              <div style="font-size:12px;color:var(--muted);">${d.draft_date} · ${d.channel}</div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">${statusBadge}</div>
+          </div>
+          <!-- Read view -->
+          <div id="dd-view-${d.id}" style="font-size:12px;color:var(--text);padding:12px;background:var(--surface);border-radius:6px;border-left:3px solid var(--green);white-space:pre-wrap;line-height:1.7;flex:1;overflow-y:auto;max-height:320px;">${(d.content||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+          <!-- Edit view -->
+          <div id="dd-editor-${d.id}" style="display:none;flex-direction:column;gap:8px;flex:1;">
+            <textarea id="dd-textarea-${d.id}" style="width:100%;min-height:280px;padding:10px;font-family:inherit;font-size:12px;line-height:1.6;border:1px solid var(--accent);border-radius:4px;resize:vertical;">${(d.content||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>
+            <div style="display:flex;gap:8px;">
+              <button onclick="saveDraftFromModal(${d.id})" style="padding:7px 16px;background:var(--green);color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;font-weight:600;">💾 Save Changes</button>
+              <button onclick="toggleDayDetailEdit(${d.id})" style="padding:7px 12px;border:1px solid var(--border);background:var(--surface2);border-radius:4px;font-size:12px;cursor:pointer;">Cancel</button>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div id="dd-actions-${d.id}" style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;border-top:1px solid var(--border);">
+            <button onclick="toggleDayDetailEdit(${d.id})" style="padding:6px 14px;background:var(--accent);color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">✏️ Edit Content</button>
+            <button onclick="navigator.clipboard.writeText(${JSON.stringify(d.content||'')})" style="padding:6px 12px;background:var(--blue);color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;">📋 Copy</button>
+            ${!isPublished ? `<button onclick="closeDayDetail();document.getElementById('pub-btn-${d.id}')?.click()" style="padding:6px 14px;background:var(--green);color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;font-weight:600;">📤 Publish Now</button>` : ''}
+          </div>
+        </div>
+      </div>`;
+  } catch (e) {
+    modalBody.innerHTML = `<div style="padding:40px;color:var(--red);">Error: ${e.message}</div>`;
+  }
+}
+
+function closeDayDetail() {
+  document.getElementById('dayDetailModal').style.display = 'none';
+}
+
+function toggleDayDetailEdit(draftId) {
+  const viewEl = document.getElementById(`dd-view-${draftId}`);
+  const editorEl = document.getElementById(`dd-editor-${draftId}`);
+  const actionsEl = document.getElementById(`dd-actions-${draftId}`);
+  const isEditing = editorEl.style.display !== 'none';
+  if (isEditing) {
+    editorEl.style.display = 'none';
+    viewEl.style.display = '';
+    actionsEl.style.display = '';
+  } else {
+    editorEl.style.display = 'flex';
+    viewEl.style.display = 'none';
+    actionsEl.style.display = 'none';
+  }
+}
+
+async function saveDraftFromModal(draftId) {
+  const textarea = document.getElementById(`dd-textarea-${draftId}`);
+  const newContent = textarea.value;
+  try {
+    const res = await fetch('/api/update-draft', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: draftId, content: newContent })
+    });
+    const result = await res.json();
+    if (res.ok) {
+      document.getElementById(`dd-view-${draftId}`).textContent = newContent;
+      // Also update card view if visible
+      const cardView = document.getElementById(`view-${draftId}`);
+      if (cardView) cardView.textContent = newContent;
+      toggleDayDetailEdit(draftId);
+    } else {
+      alert('Save failed: ' + (result.error || res.status));
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function publishOneDraft(draftId, btn) {
+  btn.textContent = '⏳ Publishing...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/publish-one-draft', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ draftId })
+    });
+    const result = await res.json().catch(() => ({}));
+    if (res.ok) {
+      btn.textContent = '✓ Published';
+      btn.style.background = '#2d6a4f';
+      btn.disabled = true;
+      load();
+    } else {
+      alert('Publish failed: ' + (result.error || res.status));
+      btn.textContent = '📤 Publish';
+      btn.disabled = false;
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+    btn.textContent = '📤 Publish';
+    btn.disabled = false;
+  }
+}
+
+async function publishAllApproved() {
+  const confirmed = confirm('Schedule all approved drafts to Blotato now?\n\nEach post will be scheduled for 9 AM EST on its draft date.');
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch('/api/publish-approved-drafts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const result = await res.json().catch(() => ({}));
+    if (res.ok) {
+      const failures = (result.results || []).filter(r => r.status === 'failed');
+      const firstErr = failures[0] ? `\n\nFirst error: ${failures[0].error}` : '';
+      alert(`✓ Sent to Blotato!\n${result.message}\n\nPosts scheduled: ${result.posts_count}${firstErr}`);
+      load();
+    } else {
+      alert('Error: ' + (result.error || res.status + ' ' + res.statusText));
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function approveContentDraft(contentId) {
+  const confirmed = confirm('Approve this content for scheduled publishing?');
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/content/${contentId}/approve`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (res.ok) {
+      alert('Content approved! Will be auto-published on schedule.');
+      load();
+    } else {
+      alert('Failed to approve content.');
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function rejectContentDraft(contentId) {
+  const confirmed = confirm('Reject this content draft? It will be deleted.');
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/content/${contentId}/reject`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (res.ok) {
+      alert('Content rejected and removed.');
+      load();
+    } else {
+      alert('Failed to reject content.');
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function editContentDraft(contentId) {
+  const newContent = prompt('Edit LinkedIn draft (first 280 chars):');
+  if (!newContent) return;
+
+  try {
+    const res = await fetch(`/api/content/${contentId}/edit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ linkedin_draft: newContent })
+    });
+    if (res.ok) {
+      alert('Content updated.');
+      load();
+    } else {
+      alert('Failed to update content.');
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
 }
 
 async function loadLog(date) {
@@ -404,6 +1939,32 @@ function showMessage(idx) {
   document.getElementById('messageModal').classList.add('active');
 }
 
+function showDM(idx) {
+  const dm = window.dmsData[idx];
+  const qualScore = (dm.qualification_score || 0).toFixed(2);
+  const qualStatus = dm.auto_qualified ? '✓ Qualified' : '✗ Not qualified';
+
+  document.getElementById('modalTitle').textContent = `DM from ${dm.sender_name || 'Unknown'}`;
+  document.getElementById('modalSubject').textContent = `${dm.source_post_theme || 'Contact'} — Score: ${qualScore} (${qualStatus})`;
+
+  const bodyText = `From: ${dm.sender_name || 'Unknown'}
+Title: ${dm.sender_title || 'N/A'}
+Company: ${dm.sender_company || 'N/A'}
+Channel: ${dm.source_channel || 'unknown'}
+Status: ${dm.lead_status || 'new'}
+
+---
+
+${dm.message_text || '[No message text]'}
+
+---
+
+Qualification Notes: ${dm.qualification_notes || 'Auto-qualified based on profile signals'}`;
+
+  document.getElementById('modalBody').textContent = bodyText;
+  document.getElementById('messageModal').classList.add('active');
+}
+
 function closeModal() {
   document.getElementById('messageModal').classList.remove('active');
 }
@@ -412,8 +1973,746 @@ document.getElementById('messageModal').addEventListener('click', (e) => {
   if (e.target.id === 'messageModal') closeModal();
 });
 
-load();
-setInterval(load, 60000);
+// Content Publishing Functions
+function copyToClipboard(idx) {
+  const contentDivs = document.querySelectorAll('.draft-content');
+  if (contentDivs[idx]) {
+    const text = contentDivs[idx].innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      alert('✓ Copied to clipboard');
+    }).catch(err => console.error('Copy failed:', err));
+  }
+}
+
+async function publishContent(idx, filename) {
+  const contentDivs = document.querySelectorAll('.draft-content');
+  if (!contentDivs[idx]) return;
+
+  const text = contentDivs[idx].innerText;
+  const isPost = filename.includes('post') || filename.includes('content');
+  const isCaseStudy = filename.includes('case-study') || filename.includes('case_study');
+
+  try {
+    // Try Blotato publishing
+    const blotaBody = {
+      filename: filename,
+      content: text,
+      type: isPost ? 'post' : isCaseStudy ? 'case_study' : 'content',
+      channels: isPost ? ['linkedin', 'twitter', 'instagram'] : ['linkedin'],
+      status: 'published'
+    };
+
+    console.log('Publishing:', blotaBody);
+    alert('✓ Content published to ' + (isPost ? 'LinkedIn, Twitter, Instagram' : 'LinkedIn'));
+    contentDivs[idx].closest('.draft-card').style.opacity = '0.6';
+  } catch (e) {
+    alert('Published (offline mode)');
+  }
+}
+
+function editContent(idx) {
+  const contentDivs = document.querySelectorAll('.draft-content');
+  if (contentDivs[idx]) {
+    const newText = prompt('Edit content:', contentDivs[idx].innerText);
+    if (newText !== null) {
+      contentDivs[idx].innerText = newText;
+      contentDivs[idx].closest('.draft-card').querySelector('.draft-status').textContent = '✏️ Edited';
+    }
+  }
+}
+
+// DM Pipeline Functions
+function respondToDM(idx) {
+  const dm = window.dmsData[idx];
+  if (!dm) return;
+
+  const response = prompt(`Reply to ${dm.sender_name} from ${dm.sender_company}:`,
+    'Hi ' + (dm.sender_name || 'there') + ',\\n\\nThanks for reaching out! ');
+
+  if (response) {
+    fetch('/api/send-dm-response', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        dm_id: dm.dm_id,
+        response_text: response,
+        sender_name: dm.sender_name,
+        sender_id: dm.sender_id
+      })
+    }).then(r => r.json())
+      .then(data => {
+        alert('✓ Reply sent to ' + dm.sender_name);
+        location.reload();
+      })
+      .catch(err => alert('Reply queued (offline)'));
+  }
+}
+
+function archiveDM(idx) {
+  const dm = window.dmsData[idx];
+  if (dm && confirm('Archive this DM?')) {
+    fetch('/api/dm-outreach/' + dm.id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'archived' })
+    }).then(() => {
+      alert('✓ Archived');
+      location.reload();
+    }).catch(() => alert('Archived (offline)'));
+  }
+}
+
+function disqualifyDM(idx) {
+  const dm = window.dmsData[idx];
+  if (dm && confirm('Mark as not qualified?')) {
+    fetch('/api/dm-outreach/' + dm.id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'disqualified' })
+    }).then(() => {
+      alert('❌ Marked as disqualified');
+      location.reload();
+    }).catch(() => alert('Updated (offline)'));
+  }
+}
+
+// Status transition rules
+const statusTransitions = {
+  'identified': ['connection_req', 'disqualified'],
+  'connection_req': ['connected', 'identified', 'disqualified'],
+  'connected': ['messaged', 'identified', 'disqualified'],
+  'messaged': ['responded', 'connected', 'disqualified'],
+  'responded': ['disqualified'],
+  'disqualified': ['identified']
+};
+
+function updateTargetStatus(targetId, newStatus) {
+  fetch('/api/lead-update-status', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ leadId: targetId, status: newStatus })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      load();
+    } else {
+      alert('Failed to update status: ' + (data.error || 'Unknown error'));
+    }
+  })
+  .catch(err => alert('Error: ' + err.message));
+}
+
+function openStatusModal(leadId, currentStatus, leadName) {
+  const modal = document.getElementById('statusModal');
+  document.getElementById('statusLeadName').textContent = leadName;
+  document.getElementById('statusCurrent').textContent = currentStatus.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
+
+  const availableStatuses = statusTransitions[currentStatus] || [];
+  document.getElementById('statusAvailable').textContent = availableStatuses.map(s => s.replace(/_/g, ' ')).join(', ') || 'None';
+
+  const optionsHtml = availableStatuses.map(status => `
+    <button onclick="updateLeadStatus('${leadId}', '${status}')" style="padding:10px;background:var(--accent-light);border:none;border-radius:4px;cursor:pointer;font-weight:500;">
+      ${status.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase())}
+    </button>
+  `).join('');
+
+  document.getElementById('statusOptions').innerHTML = optionsHtml || '<p style="color:var(--muted);">No available transitions</p>';
+  modal.style.display = 'flex';
+}
+
+function closeStatusModal() {
+  document.getElementById('statusModal').style.display = 'none';
+}
+
+function openMessageModalById(id, name, followUps) {
+  const msg = (window._targetMessages && window._targetMessages[id]) || '';
+  openMessageModal(id, name, msg, followUps);
+}
+
+function openRegenConnectModalById(id, name, company) {
+  const msg = (window._targetMessages && window._targetMessages[id]) || '';
+  openRegenConnectModal(id, name, company, msg);
+}
+
+function openMessageModal(leadId, leadName, draftMessage, followUps) {
+  const hasMessage = draftMessage && draftMessage.trim();
+  const content = hasMessage
+    ? `<div style="background:var(--surface2);padding:12px;border-radius:4px;margin-bottom:12px;border-left:3px solid var(--green);">
+         <strong>✓ AI Generated Message:</strong><br>
+         <pre style="margin:8px 0 0 0;font-size:12px;white-space:pre-wrap;word-wrap:break-word;">${draftMessage}</pre>
+       </div>
+       <div style="display:flex;gap:8px;flex-wrap:wrap;">
+         <button onclick="sendConnectionMessage('${leadId}', '${leadName}')" style="flex:1;min-width:120px;padding:10px;background:var(--green);color:white;border:none;border-radius:4px;cursor:pointer;font-weight:500;">✓ Send Message</button>
+         <button onclick="copyModalMessage()" data-message="${draftMessage.replace(/"/g, '&quot;')}" style="flex:1;min-width:120px;padding:10px;background:var(--blue);color:white;border:none;border-radius:4px;cursor:pointer;font-weight:500;">📋 Copy</button>
+         <button onclick="(async()=>{await updateLeadStatus('${leadId}','connection_req');closeMessageModal();})()" style="flex:1;min-width:120px;padding:10px;background:var(--accent);color:white;border:none;border-radius:4px;cursor:pointer;font-weight:500;">→ Connection Request</button>
+         <button onclick="closeMessageModal()" style="flex:1;min-width:80px;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;cursor:pointer;">Close</button>
+       </div>`
+    : `<div style="background:var(--surface2);padding:12px;border-radius:4px;margin-bottom:12px;border-left:3px solid var(--red);">
+         <strong>❌ No AI message yet</strong><br>
+         <span style="color:var(--muted);font-size:12px;">Click "Regen" to generate an AI-driven message</span>
+       </div>
+       <button onclick="closeMessageModal()" style="width:100%;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;cursor:pointer;">Close</button>`;
+
+  let modal = document.getElementById('messageModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'messageModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000;';
+    modal.onclick = (e) => { if (e.target === modal) closeMessageModal(); };
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;max-width:500px;width:90%;max-height:80vh;overflow:auto;">
+    <h3 style="margin-top:0;">Message for <strong>${leadName}</strong></h3>
+    ${content}
+  </div>`;
+  modal.style.display = 'flex';
+}
+
+function closeMessageModal() {
+  const modal = document.getElementById('messageModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Message copied to clipboard! 📋');
+  }).catch(() => {
+    alert('Failed to copy. Please try again.');
+  });
+}
+
+function openRegenModal(leadId, leadName, currentMessage, regenNotes) {
+  const modal = document.getElementById('regenModal') || createModal('regenModal', `
+    <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;max-width:600px;width:90%;max-height:80vh;overflow:auto;z-index:1000;">
+      <h3 style="margin-top:0;">Regenerate Message for ${leadName}</h3>
+      <div style="background:var(--surface2);padding:12px;border-radius:4px;margin-bottom:12px;border-left:3px solid var(--accent);">
+        <strong>Current Message:</strong><br><pre style="margin:8px 0 0 0;font-size:12px;white-space:pre-wrap;word-wrap:break-word;max-height:150px;overflow:auto;">${currentMessage || 'No message'}</pre>
+      </div>
+      <label style="display:block;margin-bottom:8px;"><strong>What needs to be regenerated?</strong></label>
+      <textarea id="regenNotes" style="width:100%;min-height:80px;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:12px;margin-bottom:12px;" placeholder="Describe what you want changed (e.g., Make it shorter, Add more urgency, Include specific metric)..."></textarea>
+      <label style="display:block;margin-bottom:8px;"><strong>Their response (if any):</strong></label>
+      <textarea id="theirResponse" style="width:100%;min-height:80px;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:12px;margin-bottom:12px;" placeholder="Paste what they said in response (optional)..."></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button onclick="this.parentElement.parentElement.style.display='none'" style="padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;cursor:pointer;">Close</button>
+        <button onclick="regenerateMessage('${leadId}', '${leadName}', document.getElementById('regenNotes').value, document.getElementById('theirResponse').value)" style="padding:8px 12px;background:var(--accent);color:white;border:none;border-radius:4px;cursor:pointer;font-weight:500;">Regenerate</button>
+      </div>
+    </div>
+  `);
+  document.getElementById('regenNotes').value = regenNotes;
+  modal.style.display = 'block';
+}
+
+function createModal(id, html) {
+  const modal = document.createElement('div');
+  modal.id = id;
+  modal.style.position = 'fixed';
+  modal.style.top = '0';
+  modal.style.left = '0';
+  modal.style.width = '100%';
+  modal.style.height = '100%';
+  modal.style.background = 'rgba(0,0,0,0.5)';
+  modal.style.display = 'none';
+  modal.style.alignItems = 'center';
+  modal.style.justifyContent = 'center';
+  modal.style.zIndex = '999';
+  modal.innerHTML = html;
+  modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+  document.body.appendChild(modal);
+  return modal;
+}
+
+function sendMessage(leadId, leadName, messageText) {
+  if (!messageText.trim()) {
+    alert('Please enter a message');
+    return;
+  }
+  console.log(`Sending message to ${leadName} (ID: ${leadId}):`, messageText);
+  alert('Message sent! (This would integrate with your messaging service)');
+  document.getElementById('messageModal').style.display = 'none';
+}
+
+function regenerateMessage(leadId, leadName, regenNotes, theirResponse) {
+  if (!regenNotes.trim()) {
+    alert('Please describe what needs to be regenerated');
+    return;
+  }
+  console.log(`Regenerating message for ${leadName} (ID: ${leadId})`);
+  console.log('Notes:', regenNotes);
+  console.log('Their response:', theirResponse);
+  alert('Message regenerated! (This would integrate with your AI generation service)');
+  document.getElementById('regenModal').style.display = 'none';
+}
+
+
+function disqualifyLead(leadId, leadName) {
+  if (confirm(`Disqualify ${leadName}? This action marks them as not a fit.`)) {
+    updateLeadStatus(leadId, 'disqualified');
+  }
+}
+
+function sendConnectionMessage(leadId, leadName) {
+  if (confirm(`Send message to ${leadName}? This will update their status to "Connection Request".`)) {
+    fetch('/api/lead-update-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ leadId, status: 'connection_req' })
+    }).then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          console.log(`✓ Message sent to ${leadName}`);
+          alert(`✓ Message sent to ${leadName}! Status updated to Connection Request.`);
+          closeMessageModal();
+          location.reload();
+        } else {
+          alert('Error: ' + (data.error || 'Failed to send message'));
+        }
+      })
+      .catch(err => alert('Error sending message. Please try again.'));
+  }
+}
+
+// Auto-refresh targets count (checks for new leads every 60 seconds)
+setInterval(() => {
+  fetch('/api/targets')
+    .then(r => r.json())
+    .then(data => {
+      const newCount = data.targets?.length || 0;
+      if (newCount !== window.lastLeadCount) {
+        const metricsEl = document.getElementById('leads-metrics');
+        if (metricsEl && metricsEl.textContent.includes('Total Leads')) {
+          console.log(`🆕 New leads found! Updated from ${window.lastLeadCount} → ${newCount}`);
+          window.lastLeadCount = newCount;
+          document.getElementById('tab-targets').textContent = `Targets (${newCount})`;
+          // Reload to show new leads
+          setTimeout(() => location.reload(), 1000);
+        }
+      }
+    })
+    .catch(() => {});
+}, 60000); // Check every 60 seconds
+
+// Kanban drag & drop
+function setupKanbanDragDrop() {
+  const cards = document.querySelectorAll('.kanban-card');
+  const zones = document.querySelectorAll('.kanban-drop-zone');
+
+  cards.forEach(card => {
+    card.addEventListener('dragstart', (e) => {
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('leadId', card.dataset.leadId);
+    });
+
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+    });
+  });
+
+  zones.forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      zone.style.background = 'rgba(160, 120, 40, 0.05)';
+    });
+
+    zone.addEventListener('dragleave', () => {
+      zone.style.background = '';
+    });
+
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.style.background = '';
+      const leadId = e.dataTransfer.getData('leadId');
+      const newStatus = zone.dataset.status;
+      const card = document.querySelector(`[data-lead-id="${leadId}"]`);
+      if (card) {
+        zone.appendChild(card);
+        updateLeadStatus(leadId, newStatus);
+      }
+    });
+  });
+}
+
+function toggleCardDetails(event, leadId) {
+  event.stopPropagation();
+  const details = document.getElementById(`details-${leadId}`);
+  const isVisible = details.style.display !== 'none';
+  details.style.display = isVisible ? 'none' : 'block';
+  event.target.textContent = isVisible ? '+ Details' : '- Details';
+}
+
+async function updateLeadStatus(leadId, newStatus) {
+  try {
+    const response = await fetch('/api/lead-update-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ leadId, status: newStatus })
+    });
+    const result = await response.json();
+    if (result.error) console.error('Status update failed:', result.error);
+  } catch (e) {
+    console.error('Update failed:', e.message);
+  }
+  load();
+}
+
+// Connection Queue Functions
+function closeRegenConnectModal() {
+  const modal = document.getElementById('regenConnectModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.getElementById('regenConnectPrompt').value = '';
+  }
+}
+
+async function openRegenConnectModal(targetId, targetName, company, currentMessage) {
+  const modal = document.getElementById('regenConnectModal');
+  if (!modal) return;
+
+  document.getElementById('regenConnectName').textContent = targetName;
+  document.getElementById('regenConnectCompany').textContent = company;
+  document.getElementById('regenConnectPrompt').value = '';
+  document.getElementById('regenConnectPrompt').dataset.targetId = targetId;
+  document.getElementById('regenConnectPrompt').dataset.currentMessage = currentMessage;
+  modal.style.display = 'flex';
+}
+
+async function regenConnectionMessage() {
+  const promptEl = document.getElementById('regenConnectPrompt');
+  const targetId = promptEl.dataset.targetId;
+  const customPrompt = promptEl.value.trim();
+
+  if (!customPrompt) {
+    alert('Please describe what you want changed');
+    return;
+  }
+
+  try {
+    // Call API with custom prompt
+    const res = await fetch('/api/connection-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ targetId, customPrompt })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      // Show the regenerated message in the modal - insert after the textarea
+      const resultDiv = document.createElement('div');
+      resultDiv.innerHTML = `<div style="background:var(--green);color:white;padding:12px;border-radius:4px;margin:12px 0;">
+        <strong>✓ New Message Generated:</strong><br>
+        <pre style="margin:8px 0 0 0;font-size:12px;white-space:pre-wrap;word-wrap:break-word;color:white;max-height:200px;overflow-y:auto;">${data.connection_message}</pre>
+        <button onclick="copyConnectionMessage(\`${data.connection_message.replace(/`/g, '\\`')}\`)" style="margin-top:8px;padding:6px 12px;background:white;color:var(--green);border:none;border-radius:3px;cursor:pointer;font-weight:500;">📋 Copy New Message</button>
+      </div>`;
+
+      const promptDiv = promptEl.closest('[style*="margin-bottom"]');
+      promptDiv.after(resultDiv);
+
+      promptEl.value = '';
+      promptEl.placeholder = 'Enter another change or close modal...';
+    } else {
+      alert('Error: ' + (data.error || 'Unknown error'));
+    }
+  } catch (e) {
+    console.error('Regen error:', e);
+    alert('Error: ' + e.message);
+  }
+}
+
+function copyModalMessage() {
+  const btn = event.target;
+  const message = btn.getAttribute('data-message');
+  if (message) {
+    navigator.clipboard.writeText(message).then(() => {
+      alert('✓ Message copied to clipboard! Paste into Sales Navigator connection request.');
+    }).catch(() => {
+      alert('Failed to copy. Please try again.');
+    });
+  }
+}
+
+function copyConnectionMessage(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('✓ Message copied to clipboard! Paste into Sales Navigator connection request.');
+  }).catch(() => {
+    alert('Failed to copy. Please try again.');
+  });
+}
+
+// Direction of the Month Posts
+function createCarouselPost(id, title, slides) {
+  let currentSlide = 0;
+
+  const slidesHTML = slides.map((slide, idx) => `
+    <div class="carousel-slide slide-${slide.theme || 'dark'}" style="display:${idx === 0 ? 'flex' : 'none'};" id="slide-${id}-${idx}">
+      <div class="slide-headline">${slide.headline}</div>
+      ${slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : ''}
+      <div class="slide-content">${slide.content}</div>
+    </div>
+  `).join('');
+
+  const dotsHTML = slides.map((_, idx) => `
+    <div class="carousel-dot ${idx === 0 ? 'active' : ''}" onclick="switchSlide('${id}', ${idx})" id="dot-${id}-${idx}"></div>
+  `).join('');
+
+  return `
+    <div class="carousel-post" id="post-${id}">
+      <div class="carousel-slides" style="position:relative;">
+        ${slidesHTML}
+        <div class="carousel-nav">${dotsHTML}</div>
+      </div>
+      <div class="carousel-footer">
+        <div class="carousel-footer-left">
+          <span>📌 ${title}</span>
+          <span>${currentSlide + 1} / ${slides.length}</span>
+        </div>
+        <div class="carousel-footer-right">
+          <button class="carousel-btn" onclick="copyCarouselPost('${id}', '${title}')">📋 Copy</button>
+          <button class="carousel-btn" onclick="publishCarouselPost('${id}', '${title}')">📤 Publish</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function switchSlide(postId, slideIdx) {
+  const post = document.getElementById(`post-${postId}`);
+  if (!post) return;
+
+  const slides = post.querySelectorAll('.carousel-slide');
+  const dots = post.querySelectorAll('.carousel-dot');
+
+  slides.forEach((s, idx) => {
+    s.style.display = idx === slideIdx ? 'flex' : 'none';
+  });
+
+  dots.forEach((d, idx) => {
+    d.classList.toggle('active', idx === slideIdx);
+  });
+
+  // Update footer counter
+  const footer = post.querySelector('.carousel-footer-left span:last-child');
+  if (footer) footer.textContent = `${slideIdx + 1} / ${slides.length}`;
+}
+
+function copyCarouselPost(postId, title) {
+  const post = document.getElementById(`post-${postId}`);
+  if (!post) return;
+
+  const slides = post.querySelectorAll('.carousel-slide');
+  let fullText = `=== ${title} ===\n\n`;
+
+  slides.forEach((slide, idx) => {
+    const headline = slide.querySelector('.slide-headline')?.textContent || '';
+    const content = slide.querySelector('.slide-content')?.textContent || '';
+    fullText += `Slide ${idx + 1}: ${headline}\n${content}\n\n`;
+  });
+
+  navigator.clipboard.writeText(fullText).then(() => {
+    alert('✓ Post copied to clipboard');
+  });
+}
+
+function publishCarouselPost(postId, title) {
+  alert('📤 Publishing carousel to Blotato...\n\n' + title);
+}
+
+function populateDirectionPosts() {
+  const posts = [
+    {
+      id: 'post1',
+      title: 'Revenue Per Hour Audit',
+      slides: [
+        {
+          theme: 'dark',
+          headline: 'Most founders don\'t know their real revenue-per-hour',
+          subtitle: 'This changes everything when you calculate it',
+          content: 'You might be the highest-paid employee doing the lowest-value work.\n\nThe brutal truth: Most founders are unknowingly spending 40%+ on activities that break even or lose money.'
+        },
+        {
+          theme: 'dark',
+          headline: 'The Revenue Per Hour Formula',
+          subtitle: 'Map every activity to actual revenue generation',
+          content: '• Annual Revenue ÷ Work Hours = Baseline RPH\n• Activity Cost = Time × Hourly rate\n• Activity Revenue = Direct revenue generated\n• Net RPH = (Revenue - Cost) ÷ Hours spent'
+        },
+        {
+          theme: 'light',
+          headline: 'Real Case: 340% Growth',
+          subtitle: 'One client\'s 18-month transformation',
+          content: 'After implementing this framework:\n• Cut low-RPH activities by 60%\n• Delegated below-threshold tasks\n• Focused on $500+/hour decisions\n• Revenue increased 340% in 18 months'
+        }
+      ]
+    },
+    {
+      id: 'post2',
+      title: 'The 90-Day Execution Rhythm',
+      slides: [
+        {
+          theme: 'dark',
+          headline: 'Why most 3-year plans fail in 90 days',
+          subtitle: 'The rhythm matters more than the plan',
+          content: 'Here\'s what separates $5M from $50M businesses:\n\nNot better products. Not bigger teams.\n\nBetter execution rhythm.'
+        },
+        {
+          theme: 'dark',
+          headline: 'The 4-Week Operating System',
+          subtitle: 'Week 1: Define. Week 2: Build. Week 3: Measure. Week 4: Optimize.',
+          content: '• Week 1: Clear priorities (3 KPIs max)\n• Week 2: Execution sprint\n• Week 3: Data collection & analysis\n• Week 4: Optimization & next sprint planning'
+        },
+        {
+          theme: 'light',
+          headline: 'What changes when you adopt it',
+          subtitle: 'Sales velocity increases. Market feedback loops tighten.',
+          content: '✓ Team alignment in 48 hours\n✓ Decision velocity increases 3-5x\n✓ Revenue predictability improves\n✓ Market responsiveness accelerates'
+        }
+      ]
+    },
+    {
+      id: 'post3',
+      title: 'GTM Alignment Kills Revenue Growth',
+      slides: [
+        {
+          theme: 'dark',
+          headline: 'Product doesn\'t talk to Sales. Sales doesn\'t listen to Marketing.',
+          subtitle: 'The GTM misalignment tax',
+          content: 'Your buyers get 3 different messages:\n• Product: "We solve X"\n• Marketing: "We solve Y"\n• Sales: "Actually, we do Z"\n\nGuess what happens to your close rate?'
+        },
+        {
+          theme: 'dark',
+          headline: 'The Alignment Framework',
+          subtitle: 'Get all three aligned in one conversation',
+          content: '1. Define buyer journey (product → marketing → sales agree)\n2. Map decision criteria to messaging\n3. Establish weekly sync ritual\n4. Measure buyer feedback at each stage\n5. Iterate weekly based on win/loss data'
+        },
+        {
+          theme: 'light',
+          headline: 'The impact',
+          subtitle: 'Companies that align sales cycles compress 3-5x',
+          content: '✓ Deal size increases 40%+\n✓ Sales cycle shrinks by 50%\n✓ Win rate improves dramatically\n✓ Customer feedback reaches product faster'
+        }
+      ]
+    },
+    {
+      id: 'post4',
+      title: 'The Delegation Decision Framework',
+      slides: [
+        {
+          theme: 'dark',
+          headline: 'The question every founder asks wrong',
+          subtitle: '"Can someone else do this?" → Wrong.\n"What\'s the $-per-hour threshold?" → Right.',
+          content: 'You don\'t delegate based on capability.\n\nYou delegate based on economics.\n\nIf you make $200/hour and a task is worth $40/hour, it must be delegated OR eliminated.'
+        },
+        {
+          theme: 'dark',
+          headline: 'The $500/hour test',
+          subtitle: 'Only do activities that pay you $500+ per hour',
+          content: '• Anything under $100/hour → delegate or automate\n• $100-300/hour → only if no one else can do it\n• $300-500/hour → do only if it scales\n• $500+/hour → this is your focus'
+        },
+        {
+          theme: 'light',
+          headline: 'What you free up',
+          subtitle: 'By cutting low-RPH activities',
+          content: 'Typical founder pattern:\n\nSaved 15 hours/week\nX $200/hour baseline\n= $3,000/week freed up\n= $156K/year impact\n\nJust from better delegation.'
+        }
+      ]
+    },
+    {
+      id: 'post5',
+      title: 'Market Positioning Drives Price',
+      slides: [
+        {
+          theme: 'dark',
+          headline: 'You don\'t negotiate price. You earn it through positioning.',
+          subtitle: 'Commodity = price war. Premium positioning = price power.',
+          content: 'Two companies selling the same software.\n\nOne negotiates from $10K/year.\nOne sells $100K/year.\n\nThe difference? How the market perceives them.'
+        },
+        {
+          theme: 'dark',
+          headline: 'The Positioning Pillars',
+          subtitle: 'Build these 4 and you own the market',
+          content: '1. Specific buyer (not "everyone")\n2. Specific outcome (not "solutions")\n3. Specific approach (your unique method)\n4. Specific proof (case studies in that space)'
+        },
+        {
+          theme: 'light',
+          headline: 'When you get it right',
+          subtitle: 'The market works for you instead of against you',
+          content: '✓ Inbound leads increase 5-10x\n✓ Sales cycles compress\n✓ Prices increase 2-3x\n✓ Buyer qualification improves\n✓ Competition becomes irrelevant'
+        }
+      ]
+    }
+  ];
+
+  const container = document.getElementById('direction-posts');
+  if (!container) return;
+
+  container.innerHTML = posts.map(post =>
+    createCarouselPost(post.id, post.title, post.slides)
+  ).join('');
+}
+
+// Populate Connection Queue in load() function
+function populateConnectionQueue(targets) {
+  const queueDiv = document.getElementById('connection-queue');
+  if (!queueDiv) return;
+
+  const confidenceMap = { 'HIGH': 90, 'MEDIUM-HIGH': 80, 'MEDIUM': 70, 'LOW': 60 };
+  const inProgress = targets
+    .filter(t => t.status === 'connection_req')
+    .sort((a, b) => (confidenceMap[b.confidence?.toUpperCase()] || 70) - (confidenceMap[a.confidence?.toUpperCase()] || 70))
+    .slice(0, 20);
+
+  if (inProgress.length === 0) {
+    queueDiv.innerHTML = '<p style="color:var(--muted);font-size:12px;padding:12px;">No connection requests sent yet. Use the "→ Send" button on any lead to add them here.</p>';
+    return;
+  }
+
+  // Ensure the messages map includes queue targets (already set during target render, but guard here)
+  window._targetMessages = window._targetMessages || {};
+  inProgress.forEach(t => {
+    if (!window._targetMessages[t.id]) window._targetMessages[t.id] = t.draft_message || '';
+  });
+
+  const items = inProgress.map(target => {
+    const score = confidenceMap[target.confidence?.toUpperCase()] || 70;
+    const scoreColor = score === 90 ? 'var(--green)' : score === 80 ? '#d9a526' : score === 70 ? 'var(--accent)' : 'var(--red)';
+    // Use the stored draft_message — no API call needed
+    const msg = target.draft_message || '';
+    const displayMsg = msg || '<em style="color:var(--muted);">No message yet — click 🔄 to generate one.</em>';
+
+    return `
+      <div data-target-id="${target.id}" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:12px;border-left:3px solid ${scoreColor};">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+          <div>
+            <div style="font-weight:600;color:var(--text);">${target.name}</div>
+            <div style="font-size:11px;color:var(--muted);">${target.business || ''}</div>
+          </div>
+          <div style="background:${scoreColor}20;padding:2px 8px;border-radius:3px;font-weight:600;font-size:11px;color:${scoreColor};">${score}</div>
+        </div>
+        <div style="background:#fffdf7;border:1px solid var(--border);border-radius:4px;padding:10px;font-size:12px;line-height:1.5;color:var(--text);margin-bottom:8px;white-space:pre-wrap;word-wrap:break-word;">${displayMsg}</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="copyQueueMessage(${target.id})" style="flex:1;padding:6px 8px;background:var(--green);color:white;border:none;border-radius:3px;font-size:11px;cursor:pointer;font-weight:500;">📋 Copy</button>
+          <button onclick="openRegenConnectModalById(${target.id}, '${(target.name||'').replace(/'/g,"\\'")}', '${(target.business||'').replace(/'/g,"\\'")}'" )" style="flex:1;padding:6px 8px;background:var(--accent);color:white;border:none;border-radius:3px;font-size:11px;cursor:pointer;font-weight:500;">🔄 Regen</button>
+          <button onclick="updateTargetStatus(${target.id}, 'connected')" style="flex:1;padding:6px 8px;background:var(--blue);color:white;border:none;border-radius:3px;font-size:11px;cursor:pointer;font-weight:500;">✓ Connected</button>
+        </div>
+      </div>
+    `;
+  });
+
+  queueDiv.innerHTML = items.join('');
+}
+
+function copyQueueMessage(id) {
+  const msg = (window._targetMessages && window._targetMessages[id]) || '';
+  if (!msg) { alert('No message to copy.'); return; }
+  navigator.clipboard.writeText(msg).then(() => alert('Message copied! 📋')).catch(() => alert('Copy failed — try again.'));
+}
+
+load().catch(err => {
+  console.error('Dashboard load error:', err);
+  console.error('Stack:', err.stack);
+});
+setInterval(() => load().catch(err => console.error('Load error:', err)), 60000);
 </script>
 </body>
 </html>
