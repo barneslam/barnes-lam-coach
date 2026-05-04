@@ -13,6 +13,11 @@ cron = "0 15 * * *"
 function = "content-generator"
 cron = "0 13 * * 1"
 
+# Sync carousel drafts to Supabase (Monday 8:01 AM EST = 13:01 UTC)
+[[scheduled_functions]]
+function = "sync-carousel-drafts"
+cron = "1 13 * * 1"
+
 # Publish weekdays at 9 AM EST = 2 PM UTC (correct)
 [[scheduled_functions]]
 function = "publish-scheduler"
