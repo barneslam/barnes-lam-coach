@@ -1,0 +1,52 @@
+[build]
+publish = "."
+functions = "functions"
+
+# Scheduled functions (all times in UTC for Netlify)
+# Daily 10 AM EST = 15 UTC
+[[scheduled_functions]]
+function = "schedule-discovery"
+cron = "0 15 * * *"
+
+# Monday 8 AM EST = 13 UTC (Wednesdays for now, adjust as needed)
+[[scheduled_functions]]
+function = "content-generator"
+cron = "0 13 * * 1"
+
+# Publish weekdays at 9 AM EST = 2 PM UTC (correct)
+[[scheduled_functions]]
+function = "publish-scheduler"
+cron = "0 14 * * 1-5"
+
+# Blotato DM Polling - Every 30 minutes
+[[scheduled_functions]]
+function = "blotato-dm-poller"
+cron = "*/30 * * * *"
+
+# DM to Lead Converter - Every 60 minutes
+[[scheduled_functions]]
+function = "dm-to-lead-converter"
+cron = "0 * * * *"
+
+# Special test run - April 18 at 8 AM UTC
+[[scheduled_functions]]
+function = "test-full-pipeline"
+cron = "0 8 18 4 *"
+
+# API routing - redirect /api/* to Netlify functions
+[[redirects]]
+from = "/api/*"
+to = "/.netlify/functions/:splat"
+status = 200
+
+# Dashboard routing
+[[redirects]]
+from = "/"
+to = "/dashboard.html"
+status = 200
+
+# Fallback for missing routes
+[[redirects]]
+from = "/*"
+to = "/dashboard.html"
+status = 200
