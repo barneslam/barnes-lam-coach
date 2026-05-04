@@ -33,6 +33,18 @@ function parseFrontmatter(content) {
   return { meta, body: body.trim() };
 }
 
+function cleanMarkdown(text) {
+  return text
+    .replace(/^# .+\n?/m, '')                   // Remove H1 title (stored separately)
+    .replace(/^## Slide \d+:\s*/mg, '')          // Strip slide labels
+    .replace(/^## /mg, '')                        // Strip remaining H2
+    .replace(/\*\*(.+?)\*\*/g, '$1')             // Bold → plain
+    .replace(/\*(.+?)\*/g, '$1')                 // Italic → plain
+    .replace(/^---$/mg, '')                       // Remove dividers
+    .replace(/\n{3,}/g, '\n\n')                  // Collapse blank lines
+    .trim();
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: CORS };
 
@@ -76,11 +88,12 @@ exports.handler = async (event) => {
         const draftDate = meta.date || filename.match(/carousel-(.+?)\.md/)[1];
 
         const title = body.split('\n').find(l => l.startsWith('# '))?.replace(/^# /, '') || '';
+        const cleanedBody = cleanMarkdown(body);
 
         draftsToSync.push({
           draft_date: draftDate,
           status: meta.status || 'pending',
-          content: body,
+          content: cleanedBody,
           title,
           draft_type: meta.type || 'carousel',
           channel: 'barneslam_co',
