@@ -15,29 +15,16 @@ const CORS = {
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: CORS };
 
-  const path = event.path || event.rawPath || '';
+  const rawPath = event.rawUrl || event.requestContext?.http?.rawPath || event.path || '';
 
   // Handle POST /api/drafts/{id}/delete
-  if (event.httpMethod === 'POST' && path.includes('/delete')) {
+  if (event.httpMethod === 'POST' && rawPath.includes('/delete')) {
     try {
-      const match = path.match(/\/drafts\/([^/]+)\/delete/) || event.rawUrl?.match(/\/drafts\/([^/]+)\/delete/);
-      if (!match) {
-        // Try to extract from the splat parameter if it exists
-        const splat = event.requestContext?.http?.rawPath || '';
-        const splatMatch = splat.match(/\/drafts\/([^/]+)\/delete/);
-        if (!splatMatch) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Invalid draft ID in path' }) };
-        const draftId = splatMatch[1];
-        const { error } = await supabase.from('gtm_drafts').delete().eq('id', draftId);
-        if (error) throw error;
-        return { statusCode: 200, headers: CORS, body: JSON.stringify({ success: true, message: 'Draft deleted' }) };
-      }
+      const match = rawPath.match(/\/drafts\/([^/]+)\/delete/);
+      if (!match) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Could not extract draft ID' }) };
 
       const draftId = match[1];
-      const { error } = await supabase
-        .from('gtm_drafts')
-        .delete()
-        .eq('id', draftId);
-
+      const { error } = await supabase.from('gtm_drafts').delete().eq('id', draftId);
       if (error) throw error;
 
       return {
@@ -51,18 +38,10 @@ exports.handler = async (event) => {
   }
 
   // Handle POST /api/drafts/{id}/reject
-  if (event.httpMethod === 'POST' && path.includes('/reject')) {
+  if (event.httpMethod === 'POST' && rawPath.includes('/reject')) {
     try {
-      const match = path.match(/\/drafts\/([^/]+)\/reject/) || event.rawUrl?.match(/\/drafts\/([^/]+)\/reject/);
-      if (!match) {
-        const splat = event.requestContext?.http?.rawPath || '';
-        const splatMatch = splat.match(/\/drafts\/([^/]+)\/reject/);
-        if (!splatMatch) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Invalid draft ID in path' }) };
-        const draftId = splatMatch[1];
-        const { error } = await supabase.from('gtm_drafts').update({ status: 'rejected', updated_at: new Date().toISOString() }).eq('id', draftId);
-        if (error) throw error;
-        return { statusCode: 200, headers: CORS, body: JSON.stringify({ success: true, message: 'Draft rejected' }) };
-      }
+      const match = rawPath.match(/\/drafts\/([^/]+)\/reject/);
+      if (!match) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Could not extract draft ID' }) };
 
       const draftId = match[1];
       const { error } = await supabase

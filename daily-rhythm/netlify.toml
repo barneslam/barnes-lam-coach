@@ -23,6 +23,21 @@ cron = "1 13 * * 1"
 function = "publish-scheduler"
 cron = "0 14 * * 1-5"
 
+# Sync RIN carousel drafts to RIN Supabase (Monday 8:00 AM EST = 13:00 UTC)
+[[scheduled_functions]]
+function = "sync-rin-carousel-drafts"
+cron = "0 13 * * 1"
+
+# Publish RIN carousels Mon-Sat at 9 AM EST = 14 UTC
+[[scheduled_functions]]
+function = "publish-rin-carousel"
+cron = "0 14 * * 1-6"
+
+# Publish Driver Pilot recruitment posts - Tuesday 9 AM EST = 14 UTC
+[[scheduled_functions]]
+function = "publish-driver-pilot-posts"
+cron = "0 14 * * 2"
+
 # Blotato DM Polling - Every 30 minutes
 [[scheduled_functions]]
 function = "blotato-dm-poller"
@@ -38,7 +53,18 @@ cron = "0 * * * *"
 function = "test-full-pipeline"
 cron = "0 8 18 4 *"
 
-# API routing - redirect /api/* to Netlify functions
+# API routing - explicit routes for delete/reject (must come before wildcard)
+[[redirects]]
+from = "/api/drafts/*/delete"
+to = "/.netlify/functions/drafts"
+status = 200
+
+[[redirects]]
+from = "/api/drafts/*/reject"
+to = "/.netlify/functions/drafts"
+status = 200
+
+# Generic API routing - redirect /api/* to Netlify functions
 [[redirects]]
 from = "/api/*"
 to = "/.netlify/functions/:splat"
