@@ -18,10 +18,13 @@ exports.handler = async (event) => {
   const rawPath = event.rawUrl || event.requestContext?.http?.rawPath || event.path || '';
 
   // Handle POST /api/drafts/{id}/delete
-  if (event.httpMethod === 'POST' && rawPath.includes('/delete')) {
+  if (event.httpMethod === 'POST' && (rawPath.includes('/delete') || event.path?.includes('/delete'))) {
     try {
-      const match = rawPath.match(/\/drafts\/([^/]+)\/delete/);
-      if (!match) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Could not extract draft ID' }) };
+      // Try multiple path formats that Netlify might pass
+      let match = rawPath.match(/drafts\/([^/]+)\/delete/);
+      if (!match) match = rawPath.match(/\/drafts\/([^/]+)\/delete/);
+      if (!match && event.path) match = event.path.match(/drafts\/([^/]+)\/delete/);
+      if (!match) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Could not extract draft ID from path: ' + rawPath }) };
 
       const draftId = match[1];
       const { error } = await supabase.from('gtm_drafts').delete().eq('id', draftId);
@@ -38,10 +41,13 @@ exports.handler = async (event) => {
   }
 
   // Handle POST /api/drafts/{id}/reject
-  if (event.httpMethod === 'POST' && rawPath.includes('/reject')) {
+  if (event.httpMethod === 'POST' && (rawPath.includes('/reject') || event.path?.includes('/reject'))) {
     try {
-      const match = rawPath.match(/\/drafts\/([^/]+)\/reject/);
-      if (!match) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Could not extract draft ID' }) };
+      // Try multiple path formats that Netlify might pass
+      let match = rawPath.match(/drafts\/([^/]+)\/reject/);
+      if (!match) match = rawPath.match(/\/drafts\/([^/]+)\/reject/);
+      if (!match && event.path) match = event.path.match(/drafts\/([^/]+)\/reject/);
+      if (!match) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Could not extract draft ID from path: ' + rawPath }) };
 
       const draftId = match[1];
       const { error } = await supabase
