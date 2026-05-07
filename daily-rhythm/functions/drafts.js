@@ -13,9 +13,19 @@ const CORS = {
 };
 
 exports.handler = async (event) => {
+  console.log('🔍 drafts.handler called:', {
+    httpMethod: event.httpMethod,
+    rawUrl: event.rawUrl,
+    rawPath: event.requestContext?.http?.rawPath,
+    path: event.path,
+    url: event.url,
+    pathParameters: event.pathParameters
+  });
+
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: CORS };
 
   const rawPath = event.rawUrl || event.requestContext?.http?.rawPath || event.path || '';
+  console.log('📍 Processing path:', rawPath, 'Method:', event.httpMethod);
 
   // Handle POST /api/drafts/{id}/delete
   if (event.httpMethod === 'POST' && (rawPath.includes('/delete') || event.path?.includes('/delete'))) {
