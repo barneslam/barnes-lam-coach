@@ -54,28 +54,40 @@ function extractImageFromCarouselFile(date) {
 
 function sanitizeCarouselContent(content) {
   // Fix text overflow issues in carousel posts by:
-  // 1. Breaking long headline sentences at logical points
-  // 2. Limiting to ~40-45 chars per line for carousel display (more aggressive to prevent cutoff)
-  // 3. Removing markdown that Instagram/Blotato carousel might not render properly
+  // 1. Limiting to ~30 chars per line (Blotato carousel has narrow text box)
+  // 2. Breaking at word boundaries to avoid mid-word cutoff
+  // 3. Removing markdown and extra whitespace
+  // 4. Total carousel text limited to 200 chars to prevent overflow
 
-  // Remove markdown frontmatter if present
-  let sanitized = content.replace(/^---[\s\S]*?---\n/g, '');
+  // Remove markdown frontmatter and extra whitespace
+  let sanitized = content
+    .replace(/^---[\s\S]*?---\n/g, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')  // Remove bold markdown
+    .replace(/\*(.+?)\*/g, '$1')      // Remove italic markdown
+    .trim();
 
-  // Split by existing lines and process each
+  // If text is longer than 200 chars, truncate to last complete word
+  if (sanitized.length > 200) {
+    const truncated = sanitized.substring(0, 200);
+    const lastSpace = truncated.lastIndexOf(' ');
+    sanitized = lastSpace > 50 ? truncated.substring(0, lastSpace) : truncated;
+  }
+
+  // Split by existing line breaks and process each
   const lines = sanitized.split('\n');
   const processedLines = lines.map(line => {
     line = line.trim();
     if (!line) return ''; // Skip empty lines
-    if (line.length <= 40) return line; // Keep short lines as-is
+    if (line.length <= 30) return line; // Keep short lines as-is
 
-    // For long lines, break at word boundaries at 40 chars max
+    // For long lines, break at word boundaries at 30 chars max (aggressive)
     const words = line.split(' ');
     const result = [];
     let current = '';
 
     for (const word of words) {
       const testLine = current ? current + ' ' + word : word;
-      if (testLine.length <= 40) {
+      if (testLine.length <= 30) {
         current = testLine;
       } else {
         if (current) result.push(current);
