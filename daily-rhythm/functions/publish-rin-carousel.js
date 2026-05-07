@@ -55,36 +55,39 @@ function extractImageFromCarouselFile(date) {
 function sanitizeCarouselContent(content) {
   // Fix text overflow issues in carousel posts by:
   // 1. Breaking long headline sentences at logical points
-  // 2. Limiting to ~55 chars per line for carousel display
+  // 2. Limiting to ~40-45 chars per line for carousel display (more aggressive to prevent cutoff)
+  // 3. Removing markdown that Instagram/Blotato carousel might not render properly
 
-  const lines = content.split('\n');
+  // Remove markdown frontmatter if present
+  let sanitized = content.replace(/^---[\s\S]*?---\n/g, '');
+
+  // Split by existing lines and process each
+  const lines = sanitized.split('\n');
   const processedLines = lines.map(line => {
-    // Skip if line is too short
-    if (line.length < 55) return line;
+    line = line.trim();
+    if (!line) return ''; // Skip empty lines
+    if (line.length <= 40) return line; // Keep short lines as-is
 
-    // For long lines, try to break at word boundaries
-    if (line.length > 55) {
-      const words = line.split(' ');
-      const result = [];
-      let current = '';
+    // For long lines, break at word boundaries at 40 chars max
+    const words = line.split(' ');
+    const result = [];
+    let current = '';
 
-      for (const word of words) {
-        if ((current + (current ? ' ' : '') + word).length <= 55) {
-          current += (current ? ' ' : '') + word;
-        } else {
-          if (current) result.push(current);
-          current = word;
-        }
+    for (const word of words) {
+      const testLine = current ? current + ' ' + word : word;
+      if (testLine.length <= 40) {
+        current = testLine;
+      } else {
+        if (current) result.push(current);
+        current = word;
       }
-      if (current) result.push(current);
-
-      return result.join('\n');
     }
+    if (current) result.push(current);
 
-    return line;
+    return result.join('\n');
   });
 
-  return processedLines.join('\n');
+  return processedLines.filter(l => l.length > 0).join('\n');
 }
 
 exports.handler = async (event, context) => {
@@ -165,7 +168,7 @@ exports.handler = async (event, context) => {
       if (draft.graphic_url) {
         console.log(`   📸 Graphic: ${draft.graphic_url.substring(0, 50)}...`);
       }
-
+      console.log(`   📄 Content (${content.length} chars):\n${content.substring(0, 150)}...`);
 
       // Publish to each channel
       for (const channel of channels) {
